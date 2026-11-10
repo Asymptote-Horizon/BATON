@@ -1,136 +1,146 @@
-# BATON – Project Continuity Intelligence Platform
+<p align="center">
+  <img src="assets/banner.svg" alt="BATON - Project Continuity Intelligence Platform" width="100%">
+</p>
 
-> **Problem Statement Alignment:** *Prevent Critical Knowledge From Leaving With People*  
-> **Team:** MH12 | **Round:** 2 (The Build)  
-> **Tagline:** *Pass the project, not just the files.*
+<p align="center">
+  <a href="https://frontend-ruddy-sigma-71.vercel.app/dashboard"><b>Live Demo</b></a> &nbsp;·&nbsp;
+  <a href="#how-it-works">How it works</a> &nbsp;·&nbsp;
+  <a href="#quick-start">Quick start</a> &nbsp;·&nbsp;
+  <a href="#tests">Tests</a>
+</p>
 
-BATON is a permission-aware, evidence-grounded **Project Continuity Intelligence Platform** designed to solve knowledge loss when key team members exit engineering teams, student initiatives, or volunteer organizations.
+> **Problem statement:** *Prevent Critical Knowledge From Leaving With People* &nbsp;|&nbsp; **Team MH12** &nbsp;|&nbsp; Round 2 (The Build)
 
-When people leave, documentation only captures final outcomes—the reasoning behind architectural decisions, abandoned alternatives, unwritten operational workarounds, task ownership, and informal dependencies walk out the door. BATON ingests scattered project communications and records, reconstructs project state into independent structured claims, verifies every claim with verbatim quotes, and compiles verified, role-partitioned handovers with zero ungrounded assumptions.
+When someone leaves a team, documentation keeps the outcomes but loses the reasoning: why a decision was made, what was rejected, who really owns what, and which workarounds keep production alive.
 
----
+**BATON** reads project sources, turns them into small claims, and checks every claim against a verbatim quote from the source. Anything it cannot prove is demoted, never presented as fact. The result is a reviewed, role-partitioned handover for the successor.
 
-## 1. Core Workflow: From Scattered Activity to Verified Handover
-
-BATON implements the complete 5-stage handover lifecycle specified in the challenge brief:
+## How it works
 
 ```mermaid
 flowchart LR
-    subgraph S1["1. Connect & Ingest"]
-        A1[Code Repositories] --> ING[Source Ingestion]
-        A2[Meeting Notes & Transcripts] --> ING
-        A3[Task Boards & Issues] --> ING
-        A4[Chat Exports] --> ING
-        ING --> PII[PII & Secret Redaction]
-    end
+    A[Ingest sources] --> B[Redact PII and secrets]
+    B --> C[Extract claims]
+    C --> D[Verify quotes]
+    D --> E[Human review]
+    E --> F[Role-based handover]
+```
 
-    subgraph S2["2. Reconstruct"]
-        PII --> LLM[Multi-Tier Extraction Engine]
-        LLM --> CLM[Structured Knowledge Claims]
-        CLM --> ARCH[Decision Archaeology & Graph]
-    end
+1. **Ingest:** uploaded exports (docs, task-board CSVs, chat logs, PDFs) are chunked, hashed (SHA-256) and redacted.
+2. **Extract:** an LLM splits the text into claims across 12 categories (Decision, Decision Reasoning, Task Ownership, Pending Task, Dependency, Blocker, Risk, Recurring Problem, Important Contact, Deployment & Access, Timeline Milestone, Open Question).
+3. **Verify:** each claim must carry an `exact_quote`. A deterministic verifier checks it against the source (exact match, then whitespace-normalized match) and scores lexical support.
+4. **Review:** people accept, edit or reject claims. Only reviewed claims reach `Verified`.
+5. **Hand over:** the handover is compiled per role, with a Day 1 / Week 1 / Day 30 plan.
 
-    subgraph S3["3. Verify"]
-        CLM --> VER[Deterministic Quote Verifier]
-        VER --> TRUTH{Verbatim Match?}
-        TRUTH -- Yes --> VOK[Verified / Evidence-Backed]
-        TRUTH -- No / Partial --> VINF[Demoted to Inferred / Missing]
-    end
+## What makes it different
 
-    subgraph S4["4. Review & Govern"]
-        VOK --> REV[Human Review Workspace]
-        VINF --> REV
-        REV --> APP[Lead Approval & Corrections]
-    end
+- **Evidence or it doesn't count.** Claims end up as `Verified`, `Evidence-backed`, `Inferred`, `Conflict`, `Missing` or `Unverified`. A paraphrased or invented quote is demoted to `Inferred`.
+- **Never goes down.** Extraction falls through four tiers: OpenRouter, then Gemini, then Claude, then an offline regex extractor that needs no API at all.
+- **Permission-aware.** Four sensitivity tiers (`public`, `internal`, `confidential`, `restricted`). A claim inherits the most restrictive label of its evidence.
+- **Leak-tested.** Canary tokens are redacted at ingestion, and the "Ask Your Project" assistant refuses canary and injection probes. A built-in Security Lab runs 5 attack scenarios against it.
 
-    subgraph S5["5. Handover"]
-        APP --> RLS[Role-Partitioned Views]
-        RLS --> ONB[Successor Mission & 30-Day Plan]
-        RLS --> CAN[Canary Defense & Leak Refusal]
-    end
+## Readiness score
+
+A deterministic 0-100 score computed from live database claims:
+
+| Component | Weight |
+| :--- | :---: |
+| Evidence coverage (verified claims) | 25 |
+| Ownership clarity | 20 |
+| Conflict resolution | 15 |
+| Dependency documentation | 15 |
+| Access and runbook coverage | 15 |
+| Human review completion | 10 |
+
+**Safety gate:** any open *critical* risk forces **Blocked**; any unresolved conflict, or a score under 70, forces **At Risk**. Both make the handover non-deployable regardless of score. Otherwise 70+ is **High Confidence** and 85+ is **Ready**.
+
+## Platform modules
+
+| Area | What it gives you |
+| :--- | :--- |
+| **Knowledge Ledger** | Claims side by side with highlighted source evidence. |
+| **Knowledge Graph** | People, systems, decisions and dependencies as an interactive map. |
+| **Decision Archaeology** | Timeline of decisions, rationale and rejected alternatives. |
+| **Risk Radar** | 8 categories: knowledge concentration, ownership, deadline, dependency, documentation, security, technical debt, unresolved decisions. |
+| **Bus Factor** | Single-person bottlenecks and knowledge-transfer priorities. |
+| **Drift Detector** | Where current activity diverges from the documented baseline. |
+| **Living Runbooks** | Setup, deployment and recovery procedures with sign-off tracking. |
+| **Gap Interview** | Targeted questions to the leaver for whatever is still missing. |
+| **Successor Missions** | Guided onboarding tasks with progress and notes. |
+| **Handover Center** | Role-partitioned handovers plus a comprehension quiz for the successor. |
+| **Ask Your Project** | Permission-filtered Q&A that cites evidence and refuses out-of-scope queries. |
+| **Trust & Security** | Role-based access, privacy scanning, audit log and the Security Lab. |
+
+## Demo roles
+
+The demo ships with **Project Aether**, a synthetic robotics project. Switch roles from the sidebar to see how clearance changes what is visible.
+
+| Role | Max sensitivity | Purpose |
+| :--- | :--- | :--- |
+| Admin | restricted | Full governance and audit view |
+| Reviewer | restricted | Approves claims, runbooks and handovers |
+| Leaver | confidential | Reviews and annotates reconstructed knowledge |
+| Successor | internal | Receives the handover and onboarding missions |
+| Restricted Viewer | public | External or low-trust access |
+
+## Tech stack
+
+| Layer | Technology |
+| :--- | :--- |
+| Frontend | Next.js 14, React 18, TypeScript, Tailwind CSS, Recharts, Lucide |
+| Backend | FastAPI, SQLAlchemy 2, Pydantic v2, JWT auth (bcrypt) |
+| Database | PostgreSQL 16, 23 tables, auto-created on startup |
+| AI | OpenRouter, Gemini, Claude, plus an offline deterministic extractor |
+| Privacy | Regex and Shannon-entropy redaction for secrets, PII and canary tokens |
+
+## Quick start
+
+**Prerequisites:** Python 3.11+, Node.js 18+, PostgreSQL 16 with an empty database named `baton`.
+
+```bash
+# 1. Backend  (http://localhost:8000, API docs at /docs)
+cd backend
+pip install -r requirements.txt
+cp .env.example .env          # set DATABASE_URL; API keys are optional
+uvicorn app.main:app --port 8000
+
+# 2. Frontend (http://localhost:3000)
+cd frontend
+cp .env.example .env.local    # NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api/v1
+npm install
+npm run dev
+```
+
+Tables are created and the Project Aether dataset is seeded automatically on first start. Use **Reset Demo** in the sidebar to restore it.
+
+On Windows, `run_locally.bat` starts PostgreSQL, the backend and the frontend together (it expects PostgreSQL 16 in the default install path).
+
+**Environment variables**
+
+| Variable | Purpose |
+| :--- | :--- |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `JWT_SECRET` | Token signing key (change it outside local demos) |
+| `OPENROUTER_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY` | Optional. With none set, the offline extractor is used |
+| `NEXT_PUBLIC_API_URL` | Backend URL used by the frontend |
+
+## Tests
+
+```bash
+cd backend
+pytest
+```
+
+15 tests across four files cover password and JWT handling, quote verification, canary redaction and role-partitioned handovers, readiness scoring, the knowledge graph, assistant refusals, drift detection and the security simulator.
+
+## Repository layout
+
+```
+backend/    FastAPI app: api/v1 routers, models, services, tests
+frontend/   Next.js dashboard (src/app/dashboard/*)
+assets/     README banner
 ```
 
 ---
 
-## 2. Key Architectural Innovations
-
-### 1. Grounded Claim Extraction with Verbatim Verification
-Conventional LLM summaries hallucinate plausible details and flatten critical nuance. BATON decomposes ingested documents into isolated, verifiable knowledge claims across 12 distinct categories:
-- **Decisions & Decision Rationale:** Why a choice was made, what alternatives were rejected, and what trade-offs were accepted.
-- **Task Ownership & Blockers:** Who owns what, what cannot proceed, and where dependencies lie.
-- **Recurring Problems & Operational Risks:** Known failure modes and undocumented workarounds.
-- **Important Contacts & Credential References:** Who holds access and where administrative control resides.
-
-Every extracted claim is paired with an `exact_quote` from the source chunk. The **Deterministic Verifier** checks whether that quote exists character-for-character in the source chunk. If a quote is paraphrased, invented, or incomplete, the claim is automatically demoted to `Inferred` or `Missing` and flagged for human review. **No unverified assumption is ever presented as factual.**
-
-### 2. Resilient Multi-Tier LLM Architecture
-To ensure zero service interruptions during high-load periods or API rate limits, BATON deploys a three-tier extraction architecture:
-1. **Primary Tier (OpenRouter Free Gateway):** Dynamically routes extraction requests to high-performance open LLMs without API billing overhead.
-2. **Fallback Tier 1 (Gemini 3.8 Flash):** High-speed structured extraction via Google Generative Language interactions endpoint.
-3. **Fallback Tier 2 (Deterministic Offline Pattern Matcher):** A rule-based regex and linguistic parser that extracts verbatim decisions, blockers, contacts, and risks directly from raw text with 100% offline availability and zero crash risk.
-
-### 3. Role-Partitioned Access Control & Canary Leak Defense
-Knowledge handovers must never leak information beyond a recipient's clearance:
-- Ingestion automatically redacts PII and secrets via pre-processing before storage.
-- The platform maintains four sensitivity tiers: `Public`, `Internal`, `Confidential`, and `Restricted`.
-- Generated handover views compile strictly from source chunks the recipient is authorized to inspect.
-- **Canary Penetration Defense:** Injected synthetic canary tokens are continuously monitored. The "Ask Your Project" RAG assistant enforces boundary checks and explicitly refuses to surface restricted canary data to lower-clearance roles.
-
-### 4. Transparent Handover Readiness Scoring (0–100)
-Rather than relying on subjective completion checklists, BATON computes a deterministic Handover Readiness Score derived mathematically from active database claims:
-
-$$\text{Readiness Score} = 0.25 S_{\text{evidence}} + 0.20 S_{\text{ownership}} + 0.15 S_{\text{conflict}} + 0.15 S_{\text{dependency}} + 0.15 S_{\text{access}} + 0.10 S_{\text{review}}$$
-
-- **Evidence Completeness ($S_{\text{evidence}}$):** Proportion of claims linked to verified source quotes.
-- **Ownership Clarity ($S_{\text{ownership}}$):** Ratio of active components and tasks with verified primary and secondary owners.
-- **Conflict Resolution ($S_{\text{conflict}}$):** Absence of contradictory decisions or diverging timelines.
-- **Dependency Health ($S_{\text{dependency}}$):** Mapped upstream/downstream library, service, and external team links.
-- **Access & Runbook Coverage ($S_{\text{access}}$):** Verified credentials, repository permissions, and deployment procedures.
-- **Review Progress ($S_{\text{review}}$):** Sign-off percentage by authorized team leads.
-
-> **Safety Gate:** Critical unresolved blockers or high-severity contradictions force the project status into **Blocked** or **At Risk**, preventing handover sign-off regardless of numerical score.
-
----
-
-## 3. Platform Modules
-
-| Module | Core Functionality |
-| :--- | :--- |
-| **Project Knowledge Graph** | Interactive topology visualizing team members, systems, decisions, files, and dependencies with live evidence inspect drawers. |
-| **Decision Archaeology** | Structured timeline reconstructing decisions, rationale, participants, rejected alternatives, and reversal statuses. |
-| **Project Risk Radar** | 8-dimension risk heatmap evaluating knowledge concentration, unconfirmed deadlines, architectural debt, and documentation gaps. |
-| **Bus-Factor Intelligence** | Identifies critical single-person bottlenecks (Bus Factor = 1), orphaned modules, and targeted knowledge transfer priorities. |
-| **Knowledge Drift Detector** | Compares historical baseline documentation against current commits and chats to highlight divergence in ownership, scripts, and choices. |
-| **Living Runbooks** | Dynamic operational procedures (Setup, Deployment, Troubleshooting, Disaster Recovery) with inline verification and sign-off tracking. |
-| **Successor Mission Mode** | 6-stage guided onboarding sequence (Architecture, Dependencies, Environment Setup, Simulation, Blocker Resolution, Production). |
-| **Claim Ledger & Split Evidence** | Side-by-side audit interface displaying each extracted claim directly adjacent to highlighted source text. |
-| **Ask Your Project RAG Assistant** | Permission-filtered conversational interface strictly grounded in verified citations with refusal of out-of-scope queries. |
-| **Security & Canary Lab** | Automated penetration testing harness simulating direct extraction, paraphrased probing, and RAG injection attacks across role tiers. |
-| **Multi-Role Collaboration Room** | Deliberation workspace uniting outgoing leavers, technical leads, and incoming successors around flagged items. |
-| **Role-Partitioned Handover Compiler** | Generates tailored 30-day onboarding guides (Day 1, Week 1, Day 30) with cryptographic SHA-256 integrity receipt. |
-
----
-
-## 4. Evaluation Profiles (Synthetic Project: "Project Aether")
-
-The platform is pre-loaded with a comprehensive synthetic evaluation dataset (**Project Aether – Autonomous Robotics Platform**) covering cross-functional source transcripts, meeting decisions, GitHub issues, and architectural revisions.
-
-Judges and evaluators can inspect different clearance perspectives across five pre-configured role profiles:
-
-| Profile Role | Access Clearance | Intended Persona & Scope |
-| :--- | :--- | :--- |
-| **Admin** | Public, Internal, Confidential, Restricted | Complete system administration, governance, and audit visibility. |
-| **Outgoing Leaver** | Public, Internal, Confidential, Restricted | Outgoing engineer reviewing and annotating reconstructed claims. |
-| **Tech Reviewer** | Public, Internal, Confidential, Restricted | Team lead / reviewer approving decisions, runbooks, and sign-offs. |
-| **Successor** | Public, Internal, Confidential | Incoming engineer viewing mission onboarding, runbooks, and safe context. |
-| **Restricted Viewer** | Public, Internal | External partner or auditor with access limited strictly to non-confidential claims. |
-
----
-
-## 5. Technology Stack
-
-- **Frontend Application:** Next.js 14, TypeScript, Tailwind CSS, Lucide Icons, interactive SVG topology engines.
-- **Backend Services:** FastAPI (Python 3.11/3.13), Pydantic v2 schemas, modular domain service architecture.
-- **Persistence Layer:** PostgreSQL 16 on Neon Serverless Cloud (23 relational tables covering users, sources, chunks, claims, evidence, decisions, runs, and audit logs).
-- **Intelligence & Parsing:** Multi-tier extraction adapter (OpenRouter API, Google Generative Language Interactions API, deterministic regex parsing), PyPDF parser, Presidio privacy scanning.
-- **Security & Integrity:** Cryptographic SHA-256 handover receipt hashing, JWT role-based access control, synthetic canary token monitoring.
+<p align="center"><i>Pass the project, not just the files.</i></p>

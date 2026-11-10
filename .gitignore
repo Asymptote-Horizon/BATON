@@ -57,3 +57,5 @@ Thumbs.db
 
 # Local scratch and answers
 answers.txt
+context*.txt
+context v1.0.txt
