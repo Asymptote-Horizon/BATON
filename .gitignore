@@ -54,3 +54,6 @@ uploads/
 Thumbs.db
 
 .neon
+
+# Local scratch and answers
+answers.txt
