@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="BATON - Project Continuity Intelligence Platform" width="100%">
+  <img src="assets/banner.svg?v=2" alt="BATON - Project Continuity Intelligence Platform" width="100%">
 </p>
 
 <p align="center">
