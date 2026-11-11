@@ -134,16 +134,16 @@ export default function ProjectsModulePage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Module Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Project Management & Architecture</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Project Management & Architecture</h1>
+          <p className="text-xs text-slate-400 mt-0.5">
             Manage repository exports, multi-format sources, members, milestones, and architectural topology.
           </p>
         </div>
 
         {/* Tab Controls */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+        <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 shadow-sm">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -151,13 +151,13 @@ export default function ProjectsModulePage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   isActive
-                    ? "bg-white text-slate-900 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-blue-600" : "text-slate-400"}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-slate-400"}`} />
                 <span>{tab.name}</span>
               </button>
             );
@@ -167,7 +167,7 @@ export default function ProjectsModulePage() {
 
       {loading ? (
         <div className="text-center py-20 text-slate-400 text-xs">
-          <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+          <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
           Loading project data...
         </div>
       ) : (
@@ -175,18 +175,18 @@ export default function ProjectsModulePage() {
           {/* TAB 1: Overview & Team Members */}
           {activeTab === "overview" && (
             <div className="space-y-6">
-              <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-sm space-y-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                   <div>
-                    <h2 className="text-lg font-bold text-slate-900">{project?.name}</h2>
-                    <p className="text-xs text-slate-500 mt-1">{project?.description}</p>
+                    <h2 className="text-lg font-bold text-white">{project?.name}</h2>
+                    <p className="text-xs text-slate-400 mt-1">{project?.description}</p>
                   </div>
                   {project?.repository_url && (
                     <a
                       href={project.repository_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:underline font-medium"
+                      className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:underline font-medium"
                     >
                       <FolderGit2 className="w-3.5 h-3.5" />
                       <span>{project.repository_url}</span>
@@ -195,31 +195,31 @@ export default function ProjectsModulePage() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs pt-1">
-                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Sources Ingested</span>
-                    <span className="text-base font-bold text-slate-900">{sources.length}</span>
+                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Sources Ingested</span>
+                    <span className="text-base font-bold text-white">{sources.length}</span>
                   </div>
-                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Reconstructed Claims</span>
-                    <span className="text-base font-bold text-slate-900">{project?.total_claims || 38}</span>
+                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Reconstructed Claims</span>
+                    <span className="text-base font-bold text-white">{project?.total_claims || 38}</span>
                   </div>
-                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Active Handovers</span>
-                    <span className="text-base font-bold text-slate-900">{project?.total_handovers || 1}</span>
+                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Active Handovers</span>
+                    <span className="text-base font-bold text-white">{project?.total_handovers || 1}</span>
                   </div>
-                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Target Architecture</span>
-                    <span className="text-base font-bold text-blue-700">ROS2 Humble</span>
+                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Target Architecture</span>
+                    <span className="text-base font-bold text-blue-400">ROS2 Humble</span>
                   </div>
                 </div>
               </div>
 
               {/* Team Members List */}
-              <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-                <div className="p-4 border-b border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900">Project Team & Role-Based Clearance</h3>
+              <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-slate-800">
+                  <h3 className="text-sm font-bold text-white">Project Team & Role-Based Clearance</h3>
                 </div>
-                <div className="divide-y divide-slate-100 text-xs">
+                <div className="divide-y divide-slate-800 text-xs">
                   {[
                     { name: "Sarah Chen", email: "admin@baton.local", role: "Admin", clearance: "Restricted (All Levels)", status: "Active" },
                     { name: "Alex Mercer", email: "alex.leaver@baton.local", role: "Outgoing Leaver", clearance: "Restricted", status: "Transitioning" },
@@ -229,15 +229,15 @@ export default function ProjectsModulePage() {
                   ].map((m, idx) => (
                     <div key={idx} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
                       <div>
-                        <div className="font-bold text-slate-900">{m.name}</div>
-                        <div className="text-[11px] text-slate-500 font-mono">{m.email}</div>
+                        <div className="font-bold text-white">{m.name}</div>
+                        <div className="text-[11px] text-slate-400 font-mono">{m.email}</div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-xs bg-slate-100 text-slate-700 font-semibold px-2.5 py-0.5 rounded">
+                        <span className="text-xs bg-slate-800 text-slate-300 font-semibold px-2.5 py-0.5 rounded border border-slate-700">
                           {m.role}
                         </span>
-                        <span className="text-[11px] text-slate-600 font-medium">Clearance: {m.clearance}</span>
-                        <span className="text-[11px] text-emerald-600 font-semibold">{m.status}</span>
+                        <span className="text-[11px] text-slate-400 font-medium">Clearance: {m.clearance}</span>
+                        <span className="text-[11px] text-emerald-400 font-semibold">{m.status}</span>
                       </div>
                     </div>
                   ))}
@@ -249,33 +249,33 @@ export default function ProjectsModulePage() {
           {/* TAB 2: Sources & Ingestion */}
           {activeTab === "sources" && (
             <div className="space-y-6">
-              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center space-y-2 bg-slate-50/50">
-                  <Upload className="w-8 h-8 text-slate-400 mx-auto" />
-                  <h4 className="text-xs font-bold text-slate-800">Upload Authoritative Project Sources</h4>
-                  <p className="text-[11px] text-slate-500 max-w-md mx-auto leading-relaxed">
+              <div className="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm space-y-4">
+                <div className="border-2 border-dashed border-slate-800 rounded-xl p-6 text-center space-y-2 bg-slate-950/60">
+                  <Upload className="w-8 h-8 text-slate-500 mx-auto" />
+                  <h4 className="text-xs font-bold text-white">Upload Authoritative Project Sources</h4>
+                  <p className="text-[11px] text-slate-400 max-w-md mx-auto leading-relaxed">
                     Supported: GitHub exports (.json, .zip), Markdown (.md), Meeting Notes (.pdf), Task Boards (.csv, .json), Chat exports (.json).
                   </p>
-                  <div className="pt-2 flex items-center justify-center gap-2 text-xs text-slate-600">
-                    <input type="checkbox" defaultChecked disabled className="rounded text-blue-600" />
+                  <div className="pt-2 flex items-center justify-center gap-2 text-xs text-slate-400">
+                    <input type="checkbox" defaultChecked disabled className="rounded text-blue-600 bg-slate-900 border-slate-700" />
                     <span>Consent confirmed: Source data authorized for project continuity extraction.</span>
                   </div>
                 </div>
 
                 {/* Sources List */}
-                <div className="divide-y divide-slate-100 text-xs">
+                <div className="divide-y divide-slate-800 text-xs">
                   {sources.map((s) => (
                     <div key={s.id} className="py-3 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <FileText className="w-4 h-4 text-blue-600" />
+                        <FileText className="w-4 h-4 text-blue-400" />
                         <div>
-                          <span className="font-semibold text-slate-900 block">{s.filename}</span>
+                          <span className="font-semibold text-white block">{s.filename}</span>
                           <span className="text-[10px] text-slate-400 font-mono">Type: {s.file_type.toUpperCase()} • ID: {s.id.substring(0, 8)}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <SensitivityBadge level={s.sensitivity as any} />
-                        <span className="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
+                        <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
                           <CheckCircle2 className="w-3.5 h-3.5" /> Scanned & Redacted
                         </span>
                       </div>
@@ -290,16 +290,16 @@ export default function ProjectsModulePage() {
           {activeTab === "graph" && (
             <div className="space-y-4">
               {/* Graph Toolbar */}
-              <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div className="flex items-center gap-3 flex-1">
                   <div className="relative flex-1 max-w-xs">
-                    <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" />
+                    <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-500" />
                     <input
                       type="text"
                       placeholder="Search nodes..."
                       value={graphSearch}
                       onChange={(e) => setGraphSearch(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full pl-8 pr-3 py-1 text-xs bg-slate-950 border border-slate-800 text-white placeholder-slate-500 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </div>
 
@@ -308,8 +308,8 @@ export default function ProjectsModulePage() {
                       <button
                         key={t}
                         onClick={() => setGraphFilter(t)}
-                        className={`px-2 py-0.5 text-[11px] font-semibold rounded capitalize ${
-                          graphFilter === t ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        className={`px-2 py-0.5 text-[11px] font-semibold rounded capitalize transition-colors ${
+                          graphFilter === t ? "bg-blue-600 text-white shadow-xs" : "bg-slate-800 text-slate-400 hover:text-white"
                         }`}
                       >
                         {t}
@@ -318,14 +318,14 @@ export default function ProjectsModulePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 border-l border-slate-200 pl-2">
-                  <button onClick={() => setZoom((z) => Math.min(2.0, z + 0.2))} className="p-1 hover:bg-slate-100 rounded text-slate-600">
+                <div className="flex items-center gap-1 border-l border-slate-800 pl-2">
+                  <button onClick={() => setZoom((z) => Math.min(2.0, z + 0.2))} className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white">
                     <ZoomIn className="w-4 h-4" />
                   </button>
-                  <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))} className="p-1 hover:bg-slate-100 rounded text-slate-600">
+                  <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))} className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white">
                     <ZoomOut className="w-4 h-4" />
                   </button>
-                  <button onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }} className="p-1 hover:bg-slate-100 rounded text-slate-600">
+                  <button onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }} className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white">
                     <RotateCcw className="w-4 h-4" />
                   </button>
                 </div>
@@ -412,32 +412,32 @@ export default function ProjectsModulePage() {
                 </div>
 
                 {/* Node Inspector Drawer */}
-                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-2">
+                <div className="bg-slate-900 rounded-xl border border-slate-800 p-4 shadow-xs space-y-3">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-2">
                     Node Evidence Inspector
                   </div>
                   {selectedNode ? (
                     <div className="space-y-3">
                       <div>
-                        <span className="text-[10px] uppercase font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                        <span className="text-[10px] uppercase font-bold bg-slate-800 text-slate-200 border border-slate-700 px-2 py-0.5 rounded">
                           {selectedNode.type}
                         </span>
-                        <h4 className="text-sm font-bold text-slate-900 mt-1.5">{selectedNode.label}</h4>
+                        <h4 className="text-sm font-bold text-white mt-1.5">{selectedNode.label}</h4>
                         {selectedNode.details && (
-                          <p className="text-xs text-slate-600 mt-1 leading-relaxed">{selectedNode.details}</p>
+                          <p className="text-xs text-slate-300 mt-1 leading-relaxed">{selectedNode.details}</p>
                         )}
                       </div>
 
                       {selectedNode.evidence_quote && (
-                        <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-200 space-y-1">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 block">
+                        <div className="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-1">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 block">
                             Grounded Quote:
                           </span>
-                          <blockquote className="text-xs text-slate-800 italic">
+                          <blockquote className="text-xs text-slate-200 italic">
                             "{selectedNode.evidence_quote}"
                           </blockquote>
                           {selectedNode.evidence_location && (
-                            <span className="text-[10px] text-slate-500 font-mono block pt-1">
+                            <span className="text-[10px] text-slate-400 font-mono block pt-1">
                               Location: {selectedNode.evidence_location}
                             </span>
                           )}

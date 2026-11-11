@@ -27,17 +27,17 @@ interface Comment {
 }
 
 const ROLE_COLORS: Record<string, { bg: string; text: string }> = {
-  admin: { bg: "bg-purple-100", text: "text-purple-800" },
-  reviewer: { bg: "bg-blue-100", text: "text-blue-800" },
-  leaver: { bg: "bg-amber-100", text: "text-amber-800" },
-  successor: { bg: "bg-emerald-100", text: "text-emerald-800" },
+  admin: { bg: "bg-purple-950/70", text: "text-purple-300 border border-purple-800/60" },
+  reviewer: { bg: "bg-blue-950/70", text: "text-blue-300 border border-blue-800/60" },
+  leaver: { bg: "bg-amber-950/70", text: "text-amber-300 border border-amber-800/60" },
+  successor: { bg: "bg-emerald-950/70", text: "text-emerald-300 border border-emerald-800/60" },
 };
 
 const TAG_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  clarification: { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-  blocker: { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-200" },
-  resolved: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
-  general: { bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-200" },
+  clarification: { bg: "bg-blue-950/50", text: "text-blue-400", border: "border-blue-800/60" },
+  blocker: { bg: "bg-rose-950/50", text: "text-rose-400", border: "border-rose-800/60" },
+  resolved: { bg: "bg-emerald-950/50", text: "text-emerald-400", border: "border-emerald-800/60" },
+  general: { bg: "bg-slate-950", text: "text-slate-300", border: "border-slate-800" },
 };
 
 export default function CollaborationPage() {
@@ -87,27 +87,27 @@ export default function CollaborationPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Collaboration Room</h1>
-            <span className="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-200">
+            <h1 className="text-2xl font-bold text-white tracking-tight">Collaboration Room</h1>
+            <span className="text-xs bg-indigo-950/70 text-indigo-300 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-800/60">
               Multi-Role Workspace
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Structured deliberation channel for outgoing leads, technical reviewers, and incoming successors.
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
           <span className="text-slate-400">Total Discussions:</span>
-          <span className="bg-white border border-slate-200 px-2.5 py-1 rounded-lg font-bold text-slate-900">
+          <span className="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg font-bold text-slate-200">
             {comments.length} Comments
           </span>
         </div>
       </div>
 
       {/* Discussion Feed */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">
+      <div className="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm space-y-4">
+        <h3 className="text-sm font-bold text-white border-b border-slate-800 pb-3">
           Active Deliberations & Alignment Log
         </h3>
 
@@ -127,14 +127,14 @@ export default function CollaborationPage() {
               const tagStyle = TAG_COLORS[c.status_tag] || TAG_COLORS.general;
 
               return (
-                <div key={c.id} className="p-4 rounded-xl bg-slate-50/70 border border-slate-100 space-y-2">
+                <div key={c.id} className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-[11px]">
+                      <div className="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 font-bold text-[11px]">
                         {c.author_name.charAt(0)}
                       </div>
-                      <span className="text-xs font-bold text-slate-900">{c.author_name}</span>
-                      <span className={`text-[10px] font-bold uppercase px-2 py-0.2 rounded ${roleStyle.bg} ${roleStyle.text}`}>
+                      <span className="text-xs font-bold text-white">{c.author_name}</span>
+                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${roleStyle.bg} ${roleStyle.text}`}>
                         {c.author_role}
                       </span>
                     </div>
@@ -149,7 +149,7 @@ export default function CollaborationPage() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-700 leading-relaxed pl-8">
+                  <p className="text-xs text-slate-300 leading-relaxed pl-8">
                     {c.comment_text}
                   </p>
                 </div>
@@ -160,20 +160,20 @@ export default function CollaborationPage() {
       </div>
 
       {/* Post Comment Form */}
-      <form onSubmit={handlePostComment} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
-        <span className="text-xs font-bold text-slate-800 block">Post to Deliberation Thread</span>
+      <form onSubmit={handlePostComment} className="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm space-y-3">
+        <span className="text-xs font-bold text-slate-200 block">Post to Deliberation Thread</span>
 
         <textarea
           rows={3}
           placeholder="Share context on conflicting claims, ask a technical question, or propose resolution..."
           value={newText}
           onChange={(e) => setNewText(e.target.value)}
-          className="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium"
+          className="w-full p-3 text-xs bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium"
         />
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 font-medium">Tag:</span>
+            <span className="text-xs text-slate-400 font-medium">Tag:</span>
             {["general", "clarification", "blocker", "resolved"].map((tag) => (
               <button
                 key={tag}
@@ -181,8 +181,8 @@ export default function CollaborationPage() {
                 onClick={() => setSelectedTag(tag)}
                 className={`text-xs capitalize px-2.5 py-1 rounded-lg border font-medium transition-colors ${
                   selectedTag === tag
-                    ? "bg-slate-900 text-white border-slate-900 shadow-sm"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 border-slate-200"
+                    ? "bg-blue-600 text-white border-blue-500 shadow-sm"
+                    : "bg-slate-950 text-slate-400 hover:text-white border-slate-800"
                 }`}
               >
                 {tag}

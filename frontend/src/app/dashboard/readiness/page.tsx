@@ -72,19 +72,19 @@ export default function ReadinessScorePage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Handover Readiness Score</h1>
-            <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">
+            <h1 className="text-2xl font-bold text-white tracking-tight">Handover Readiness Score</h1>
+            <span className="text-xs bg-emerald-950/70 text-emerald-300 font-semibold px-2.5 py-0.5 rounded-full border border-emerald-800/60">
               Deterministic 0–100 Formula
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Auditable, evidence-backed evaluation computing whether incoming successors can assume operational control safely.
           </p>
         </div>
 
         <Link
           href="/dashboard/missions"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow-sm transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white text-xs font-semibold rounded-xl shadow-sm transition-colors"
         >
           <span>Successor Missions</span>
           <ArrowRight className="w-4 h-4" />
@@ -175,28 +175,28 @@ export default function ReadinessScorePage() {
 
           {/* 6 Weighted Category Pillar Cards */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">
               Weighted Evaluation Pillars (Total 100%)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.categories.map((cat, idx) => {
                 const percent = Math.round((cat.score / cat.max_score) * 100);
                 return (
-                  <div key={idx} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                  <div key={idx} className="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                           Weight: {cat.weight}%
                         </span>
-                        <h4 className="text-sm font-bold text-slate-900 mt-0.5">{cat.category}</h4>
+                        <h4 className="text-sm font-bold text-white mt-0.5">{cat.category}</h4>
                       </div>
-                      <span className="text-base font-extrabold text-slate-900">
+                      <span className="text-base font-extrabold text-white">
                         {cat.score} <span className="text-xs text-slate-400 font-normal">/ {cat.max_score}</span>
                       </span>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-slate-950 border border-slate-800 rounded-full h-2 overflow-hidden">
                       <div
                         className={`h-2 rounded-full transition-all duration-500 ${
                           percent >= 80 ? "bg-emerald-500" : percent >= 60 ? "bg-blue-500" : "bg-amber-500"
@@ -205,7 +205,7 @@ export default function ReadinessScorePage() {
                       />
                     </div>
 
-                    <p className="text-xs text-slate-500 leading-relaxed">
+                    <p className="text-xs text-slate-300 leading-relaxed">
                       {cat.rationale}
                     </p>
                   </div>
@@ -216,11 +216,11 @@ export default function ReadinessScorePage() {
 
           {/* Transparent Deductions Breakdown */}
           {data.deductions.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <h3 className="text-sm font-bold text-slate-900">
+                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                  <h3 className="text-sm font-bold text-white">
                     Transparent Deductions Breakdown ({data.deductions.length} Deductions)
                   </h3>
                 </div>
@@ -229,19 +229,19 @@ export default function ReadinessScorePage() {
 
               <div className="space-y-3">
                 {data.deductions.map((d, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div key={idx} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                        <span className="text-xs font-bold text-rose-300 bg-rose-950/70 px-2 py-0.5 rounded border border-rose-800/60">
                           -{d.points_deducted} pts
                         </span>
-                        <span className="text-xs font-semibold text-slate-800">{d.category}</span>
+                        <span className="text-xs font-semibold text-slate-200">{d.category}</span>
                       </div>
-                      <p className="text-xs text-slate-600">{d.reason}</p>
+                      <p className="text-xs text-slate-300">{d.reason}</p>
                     </div>
 
-                    <div className="text-xs text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200 md:max-w-xs font-medium">
-                      <span className="font-bold">Fix: </span>{d.remediation_action}
+                    <div className="text-xs text-blue-300 bg-blue-950/60 px-3 py-1.5 rounded-lg border border-blue-800/60 md:max-w-xs font-medium">
+                      <span className="font-bold text-blue-200">Fix: </span>{d.remediation_action}
                     </div>
                   </div>
                 ))}

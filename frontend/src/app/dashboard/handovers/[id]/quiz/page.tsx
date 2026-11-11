@@ -77,20 +77,20 @@ export default function ComprehensionQuizPage() {
       {/* Return Link */}
       <Link
         href="/dashboard/handovers"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Handovers
       </Link>
 
       {/* Main Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+      <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xs space-y-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-emerald-950/70 text-emerald-400 border border-emerald-800/60 flex items-center justify-center">
             <Award className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Successor Comprehension Check</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-xl font-bold text-white">Successor Comprehension Check</h1>
+            <p className="text-xs text-slate-400">
               Interactive verification of critical project decisions, blockers, and calibration steps before digital sign-off.
             </p>
           </div>
@@ -99,29 +99,29 @@ export default function ComprehensionQuizPage() {
 
       {receipt ? (
         /* Digital Receipt Modal / Card */
-        <div className="bg-white p-8 rounded-2xl border-2 border-emerald-500 shadow-xl space-y-6 animate-in fade-in zoom-in-95">
+        <div className="bg-slate-900 p-8 rounded-2xl border-2 border-emerald-500/80 shadow-xl space-y-6 animate-in fade-in zoom-in-95">
           <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 mx-auto flex items-center justify-center">
               <ShieldCheck className="w-10 h-10" />
             </div>
-            <h2 className="text-2xl font-extrabold text-slate-900">Handover Formally Acknowledged</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-2xl font-extrabold text-white">Handover Formally Acknowledged</h2>
+            <p className="text-xs text-slate-400">
               Cryptographically timestamped receipt committed to immutable audit trail.
             </p>
           </div>
 
-          <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3 text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-              <span className="text-slate-500 font-medium">Comprehension Score:</span>
-              <span className="font-bold text-emerald-700 text-sm">{receipt.quiz_score}% (PASSED)</span>
+          <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3 text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <span className="text-slate-400 font-medium">Comprehension Score:</span>
+              <span className="font-bold text-emerald-400 text-sm">{receipt.quiz_score}% (PASSED)</span>
             </div>
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-              <span className="text-slate-500 font-medium">Timestamp:</span>
-              <span className="font-mono text-slate-800">{new Date(receipt.signed_at).toLocaleString()}</span>
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <span className="text-slate-400 font-medium">Timestamp:</span>
+              <span className="font-mono text-slate-300">{new Date(receipt.signed_at).toLocaleString()}</span>
             </div>
             <div className="space-y-1">
-              <span className="text-slate-500 font-medium block">Digital SHA256 Receipt Hash:</span>
-              <div className="p-2 bg-white rounded border border-slate-200 font-mono text-[11px] text-slate-800 break-all select-all">
+              <span className="text-slate-400 font-medium block">Digital SHA256 Receipt Hash:</span>
+              <div className="p-2 bg-slate-900 rounded border border-slate-800 font-mono text-[11px] text-slate-300 break-all select-all">
                 {receipt.receipt_hash}
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function ComprehensionQuizPage() {
           <div className="flex justify-center">
             <Link
               href="/dashboard/handovers"
-              className="px-6 py-2.5 bg-brand-blue text-white rounded-lg text-xs font-semibold hover:bg-brand-dark transition-colors shadow-xs"
+              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-500 transition-colors shadow-xs"
             >
               Return to Project Dashboard
             </Link>
@@ -140,12 +140,12 @@ export default function ComprehensionQuizPage() {
         /* Quiz Questions */
         <div className="space-y-6">
           {checks.map((check, qIdx) => (
-            <div key={check.id} className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-4">
+            <div key={check.id} className="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-xs space-y-4">
               <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Question {qIdx + 1} of {checks.length}
                 </span>
-                <h3 className="font-bold text-slate-900 text-sm">{check.question}</h3>
+                <h3 className="font-bold text-white text-sm">{check.question}</h3>
               </div>
 
               <div className="space-y-2">
@@ -157,12 +157,12 @@ export default function ComprehensionQuizPage() {
                       onClick={() => handleSelectAnswer(qIdx, optIdx)}
                       className={`w-full text-left p-3 rounded-lg border text-xs font-medium transition-all flex items-center justify-between ${
                         isSelected
-                          ? "bg-blue-50 border-brand-blue text-brand-dark font-semibold shadow-xs"
-                          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                          ? "bg-blue-950/70 border-blue-500 text-white font-semibold shadow-xs"
+                          : "bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-850 hover:text-white"
                       }`}
                     >
                       <span>{option}</span>
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? "border-brand-blue bg-brand-blue text-white" : "border-slate-300"}`}>
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? "border-blue-500 bg-blue-600 text-white" : "border-slate-700"}`}>
                         {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                       </div>
                     </button>
@@ -173,11 +173,11 @@ export default function ComprehensionQuizPage() {
           ))}
 
           {/* Successor Notes / Error Reporting */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-3">
-            <label className="text-xs font-bold text-slate-800 block">
+          <div className="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-xs space-y-3">
+            <label className="text-xs font-bold text-slate-200 block">
               Successor Notes & Discrepancy Reporting (Optional)
             </label>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-slate-400">
               Notice any discrepancies in the claims? Report them here to trigger a reviewable re-revision.
             </p>
             <textarea
@@ -185,7 +185,7 @@ export default function ComprehensionQuizPage() {
               placeholder="e.g., 'I will verify the LiDAR extrinsic matrix during tomorrow's chassis assembly...'"
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              className="w-full p-3 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue/20 focus:outline-none"
+              className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
             />
           </div>
 

@@ -111,10 +111,10 @@ export default function GapInterviewPage() {
       </div>
 
       {/* Strict Requirement Notice */}
-      <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl text-xs text-blue-900 flex items-center gap-3">
-        <Sparkles className="w-5 h-5 text-brand-blue flex-shrink-0" />
+      <div className="bg-blue-950/40 border border-blue-800/60 p-4 rounded-xl text-xs text-blue-200 flex items-center gap-3">
+        <Sparkles className="w-5 h-5 text-blue-400 flex-shrink-0" />
         <div>
-          <span className="font-bold">Evidence Linking Guarantee:</span> Responses submitted here become new
+          <span className="font-bold text-white">Evidence Linking Guarantee:</span> Responses submitted here become new
           labelled evidence documents (`Gap-Interview-Response.txt`) and undergo quotation grounding. They are
           never accepted as unverified facts.
         </div>
@@ -122,34 +122,34 @@ export default function GapInterviewPage() {
 
       {/* Question Cards */}
       {loading ? (
-        <div className="p-12 text-center text-slate-500">Loading interview queue...</div>
+        <div className="p-12 text-center text-slate-400">Loading interview queue...</div>
       ) : (
         <div className="space-y-4">
           {questions.map((q, idx) => (
             <div
               key={q.id}
-              className={`bg-white rounded-xl border p-6 shadow-xs transition-all ${
+              className={`rounded-xl border p-6 shadow-xs transition-all ${
                 q.status === "answered"
-                  ? "border-emerald-200 bg-emerald-50/20"
+                  ? "border-emerald-800/80 bg-emerald-950/20"
                   : q.status === "marked_unknown"
-                  ? "border-amber-200 bg-amber-50/20 opacity-80"
-                  : "border-slate-200 hover:border-slate-300"
+                  ? "border-amber-800/80 bg-amber-950/20 opacity-80"
+                  : "bg-slate-900 border-slate-800 hover:border-slate-700"
               }`}
             >
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/60">
                       {q.context_category}
                     </span>
-                    <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-semibold text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded">
                       Gap: {q.detected_gap_type.replace(/_/g, " ")}
                     </span>
-                    <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-bold text-rose-300 bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-800/60">
                       Priority {q.priority}
                     </span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-base pt-1">
+                  <h3 className="font-bold text-white text-base pt-1">
                     {idx + 1}. {q.question_text}
                   </h3>
                 </div>
@@ -157,19 +157,19 @@ export default function GapInterviewPage() {
                 {/* Status Indicator */}
                 <div>
                   {q.status === "answered" ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300 bg-emerald-950/70 border border-emerald-800/60 px-2.5 py-1 rounded-full">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Answered & Grounded
                     </span>
                   ) : q.status === "marked_unknown" ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-300 bg-amber-950/70 border border-amber-800/60 px-2.5 py-1 rounded-full">
                       <AlertCircle className="w-3.5 h-3.5" /> Marked Unknown
                     </span>
                   ) : q.status === "skipped" ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-400 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-full">
                       <SkipForward className="w-3.5 h-3.5" /> Skipped
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-purple-700 bg-purple-100 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-purple-300 bg-purple-950/70 border border-purple-800/60 px-2.5 py-1 rounded-full">
                       <Clock className="w-3.5 h-3.5" /> Action Required
                     </span>
                   )}
@@ -178,12 +178,12 @@ export default function GapInterviewPage() {
 
               {/* Already Answered View */}
               {q.answers && q.answers.length > 0 ? (
-                <div className="mt-3 p-4 bg-emerald-50/70 border border-emerald-200 rounded-lg text-sm text-slate-800">
-                  <div className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-1">
+                <div className="mt-3 p-4 bg-emerald-950/40 border border-emerald-800/60 rounded-lg text-sm text-slate-200">
+                  <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">
                     Recorded Leaver Response:
                   </div>
-                  <div className="italic">"{q.answers[0].answer_text}"</div>
-                  <div className="text-[11px] text-emerald-700 mt-2 font-medium">
+                  <div className="italic text-slate-300">"{q.answers[0].answer_text}"</div>
+                  <div className="text-[11px] text-emerald-400 mt-2 font-medium">
                     Tagged as new evidence record. Awaiting reviewer acceptance.
                   </div>
                 </div>
@@ -195,20 +195,20 @@ export default function GapInterviewPage() {
                     placeholder="Provide specific details, instructions, contacts, or access steps..."
                     value={answers[q.id] || ""}
                     onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
-                    className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+                    className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
                   />
 
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleMarkUnknown(q.id)}
-                        className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition-colors flex items-center gap-1"
+                        className="px-3 py-1.5 text-xs font-medium text-amber-300 bg-amber-950/50 hover:bg-amber-950/80 border border-amber-800/60 rounded-lg transition-colors flex items-center gap-1"
                       >
                         <AlertCircle className="w-3.5 h-3.5" /> Mark Information Unknown
                       </button>
                       <button
                         onClick={() => handleSkip(q.id)}
-                        className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors flex items-center gap-1"
+                        className="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors flex items-center gap-1"
                       >
                         <SkipForward className="w-3.5 h-3.5" /> Skip
                       </button>

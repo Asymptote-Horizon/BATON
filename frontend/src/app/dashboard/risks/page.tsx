@@ -40,10 +40,10 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const SEVERITY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  critical: { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-300" },
-  high: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-300" },
-  medium: { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-300" },
-  low: { bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-300" },
+  critical: { bg: "bg-rose-950/70", text: "text-rose-300", border: "border-rose-800/60" },
+  high: { bg: "bg-amber-950/70", text: "text-amber-300", border: "border-amber-800/60" },
+  medium: { bg: "bg-blue-950/70", text: "text-blue-300", border: "border-blue-800/60" },
+  low: { bg: "bg-slate-800/80", text: "text-slate-300", border: "border-slate-700" },
 };
 
 export default function RiskRadarPage() {
@@ -99,33 +99,33 @@ export default function RiskRadarPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Project Risk Radar</h1>
-            <span className="text-xs bg-rose-100 text-rose-700 font-semibold px-2.5 py-0.5 rounded-full border border-rose-200">
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Project Risk Radar</h1>
+            <span className="text-xs bg-rose-950/80 text-rose-400 font-semibold px-2.5 py-0.5 rounded-full border border-rose-800">
               Continuity Threat Matrix
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Explainable departure risk analysis detecting single-person bottlenecks, orphan credentials, and unresolved blockers.
           </p>
         </div>
 
         {/* Severity Heatmap Indicators */}
         <div className="flex items-center gap-2">
-          <div className="bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-800">
+          <div className="bg-rose-950/60 border border-rose-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-300">
             {stats.critical} Critical
           </div>
-          <div className="bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-amber-800">
+          <div className="bg-amber-950/60 border border-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-amber-300">
             {stats.high} High
           </div>
-          <div className="bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-800">
+          <div className="bg-blue-950/60 border border-blue-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-300">
             {stats.medium} Medium
           </div>
-          <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700">
+          <div className="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400">
             {stats.low} Low
           </div>
         </div>
@@ -142,18 +142,18 @@ export default function RiskRadarPage() {
               onClick={() => setSelectedCategory(isSelected ? "all" : key)}
               className={`p-3 rounded-xl border text-left transition-all ${
                 isSelected
-                  ? "bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-blue-500/30"
-                  : "bg-white hover:bg-slate-50 border-slate-200 text-slate-800"
+                  ? "bg-blue-600 text-white border-blue-500 shadow-md ring-2 ring-blue-500/30"
+                  : "bg-slate-900 hover:bg-slate-800/80 border-slate-800 text-slate-200"
               }`}
             >
               <span className={`text-[10px] font-bold uppercase tracking-wider block truncate ${
-                isSelected ? "text-blue-300" : "text-slate-400"
+                isSelected ? "text-white" : "text-slate-400"
               }`}>
                 {label}
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
                 <span className="text-lg font-bold">{count}</span>
-                <span className={`text-[10px] ${count > 0 ? "text-rose-500 font-semibold" : "text-slate-400"}`}>
+                <span className={`text-[10px] ${count > 0 ? "text-rose-400 font-semibold" : "text-slate-500"}`}>
                   {count > 0 ? "Active" : "Clear"}
                 </span>
               </div>
@@ -163,15 +163,15 @@ export default function RiskRadarPage() {
       </div>
 
       {/* Search & Severity Filters */}
-      <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
           <input
             type="text"
             placeholder="Search risk title, component, description..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-950 border border-slate-800 text-white placeholder-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium"
           />
         </div>
 
@@ -179,7 +179,7 @@ export default function RiskRadarPage() {
           <select
             value={selectedSeverity}
             onChange={(e) => setSelectedSeverity(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg shadow-sm font-medium text-slate-700"
+            className="px-3 py-1.5 text-xs bg-slate-950 border border-slate-800 rounded-lg shadow-sm font-medium text-slate-200 focus:outline-none"
           >
             <option value="all">All Severities</option>
             <option value="critical">Critical Only</option>
@@ -190,7 +190,7 @@ export default function RiskRadarPage() {
           {selectedCategory !== "all" && (
             <button
               onClick={() => setSelectedCategory("all")}
-              className="text-xs text-blue-600 hover:underline font-medium"
+              className="text-xs text-blue-400 hover:text-blue-300 hover:underline font-medium"
             >
               Reset Category
             </button>
@@ -205,7 +205,7 @@ export default function RiskRadarPage() {
           Computing Project Risk Radar metrics...
         </div>
       ) : filteredFindings.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm">
+        <div className="p-12 text-center bg-slate-900 rounded-2xl border border-slate-800 text-slate-400 text-sm">
           No continuity risks match your filter parameters.
         </div>
       ) : (
@@ -215,67 +215,61 @@ export default function RiskRadarPage() {
             return (
               <div
                 key={risk.id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3.5 flex flex-col justify-between hover:border-slate-300 transition-colors"
+                className="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm space-y-3.5 flex flex-col justify-between hover:border-slate-700 transition-colors"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-3">
                     <span className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border ${sev.bg} ${sev.text} ${sev.border}`}>
                       {risk.severity} Severity
                     </span>
-                    <span className="text-[10px] bg-slate-100 text-slate-600 font-mono px-2 py-0.5 rounded">
+                    <span className="text-[10px] bg-slate-800 text-slate-300 border border-slate-700 font-mono px-2 py-0.5 rounded">
                       {CATEGORY_LABELS[risk.category] || risk.category}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-900 leading-snug">
+                  <h3 className="text-base font-bold text-white leading-snug">
                     {risk.title}
                   </h3>
 
                   {risk.affected_entity && (
-                    <div className="text-xs text-slate-500 flex items-center gap-1">
-                      <span className="font-semibold text-slate-700">Affected Component:</span>
-                      <span className="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono text-[11px]">
+                    <div className="text-xs text-slate-400 flex items-center gap-1">
+                      <span className="font-semibold text-slate-300">Affected Component:</span>
+                      <span className="bg-slate-800 text-slate-200 border border-slate-700 px-1.5 py-0.5 rounded font-mono text-[11px]">
                         {risk.affected_entity}
                       </span>
                     </div>
                   )}
 
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed">
                     {risk.description}
                   </p>
                 </div>
 
                 {/* Mitigation & Resolution Controls */}
-                <div className="space-y-3 pt-2 border-t border-slate-100">
-                  <div className="p-3 rounded-xl bg-blue-50/60 border border-blue-100 space-y-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 block">
+                <div className="space-y-3 pt-2 border-t border-slate-800">
+                  <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 block">
                       Recommended Mitigation
                     </span>
-                    <p className="text-xs text-slate-800 leading-relaxed font-medium">
+                    <p className="text-xs text-slate-200 leading-relaxed font-medium">
                       {risk.mitigation}
                     </p>
                   </div>
 
                   {risk.evidence_reference && (
-                    <div className="text-[11px] text-slate-500 italic flex items-center gap-1.5 truncate">
-                      <span className="font-semibold text-slate-600 not-italic">Grounded In:</span>
+                    <div className="text-[11px] text-slate-400 italic flex items-center gap-1.5 truncate">
+                      <span className="font-semibold text-slate-300 not-italic">Grounded In:</span>
                       <span className="truncate">{risk.evidence_reference}</span>
                     </div>
                   )}
 
                   {/* Resolution Status Dropdown */}
                   <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs text-slate-500 font-medium">Resolution Status:</span>
+                    <span className="text-xs text-slate-400 font-medium">Resolution Status:</span>
                     <select
                       value={risk.resolution_status}
                       onChange={(e) => handleStatusChange(risk.id, e.target.value)}
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg border shadow-sm ${
-                        risk.resolution_status === "resolved"
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-300"
-                          : risk.resolution_status === "mitigating"
-                          ? "bg-blue-50 text-blue-700 border-blue-300"
-                          : "bg-amber-50 text-amber-700 border-amber-300"
-                      }`}
+                      className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 shadow-sm focus:outline-none"
                     >
                       <option value="open">Open Threat</option>
                       <option value="mitigating">Mitigation In Progress</option>

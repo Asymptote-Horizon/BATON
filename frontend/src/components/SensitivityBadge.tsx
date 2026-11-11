@@ -7,29 +7,29 @@ export function SensitivityBadge({ level, sensitivity }: { level?: SensitivityLe
   switch (effectiveLevel) {
     case "public":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-          <Globe className="w-3 h-3 text-slate-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-slate-800/80 text-slate-300 border border-slate-700">
+          <Globe className="w-3 h-3 text-slate-400" />
           Public
         </span>
       );
     case "internal":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200">
-          <Lock className="w-3 h-3 text-blue-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-blue-950/70 text-blue-300 border border-blue-800/60">
+          <Lock className="w-3 h-3 text-blue-400" />
           Internal
         </span>
       );
     case "confidential":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
-          <KeyRound className="w-3 h-3 text-amber-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-950/70 text-amber-300 border border-amber-800/60">
+          <KeyRound className="w-3 h-3 text-amber-400" />
           Confidential
         </span>
       );
     case "restricted":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-red-800 border border-red-200">
-          <ShieldAlert className="w-3 h-3 text-red-600" />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-rose-950/70 text-rose-300 border border-rose-800/60">
+          <ShieldAlert className="w-3 h-3 text-rose-400" />
           Restricted / Canary
         </span>
       );

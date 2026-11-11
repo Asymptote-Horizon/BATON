@@ -106,18 +106,18 @@ export default function SecurityControlPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Trust & Security Control Center</h1>
-            <span className="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Trust & Security Control Center</h1>
+            <span className="text-xs bg-emerald-950/80 text-emerald-400 font-semibold px-2.5 py-0.5 rounded-full border border-emerald-800 flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               SOC2 & HIPAA Compliant Ready
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Enterprise boundary enforcement, cryptographic session controls, privacy redaction, and verifiable adversarial testing.
           </p>
         </div>
@@ -126,7 +126,7 @@ export default function SecurityControlPage() {
           <button
             onClick={handleRunSecurityTests}
             disabled={runningTests}
-            className="inline-flex items-center gap-2 px-3.5 py-2 bg-brand-blue hover:bg-brand-dark disabled:opacity-50 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
           >
             {runningTests ? (
               <>
@@ -145,74 +145,74 @@ export default function SecurityControlPage() {
 
       {/* Top 4 KPI Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200">
+        <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500">Security Grade</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs font-semibold text-slate-400">Security Grade</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="mt-2 text-2xl font-bold text-slate-900">
+          <div className="mt-2 text-2xl font-bold text-white">
             {healthData?.overall_grade || "A+ Certified"}
           </div>
-          <div className="text-[11px] text-emerald-600 font-medium mt-1">
+          <div className="text-[11px] text-emerald-400 font-medium mt-1">
             Zero detected leak paths
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200">
+        <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500">Suite Pass Rate</span>
-            <FileCheck2 className="w-4 h-4 text-blue-600" />
+            <span className="text-xs font-semibold text-slate-400">Suite Pass Rate</span>
+            <FileCheck2 className="w-4 h-4 text-blue-400" />
           </div>
-          <div className="mt-2 text-2xl font-bold text-slate-900">
+          <div className="mt-2 text-2xl font-bold text-white">
             {testResults ? `${testResults.pass_rate_percentage}%` : "100.0%"}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-400 mt-1">
             {testResults ? `${testResults.passed_tests}/${testResults.total_tests} tests verified` : "8 / 8 tests verified"}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200">
+        <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500">Privacy Redaction</span>
-            <EyeOff className="w-4 h-4 text-purple-600" />
+            <span className="text-xs font-semibold text-slate-400">Privacy Redaction</span>
+            <EyeOff className="w-4 h-4 text-purple-400" />
           </div>
-          <div className="mt-2 text-2xl font-bold text-slate-900">
+          <div className="mt-2 text-2xl font-bold text-white">
             {healthData?.privacy_health?.chunks_with_redactions ?? 4} Chunks
           </div>
-          <div className="text-[11px] text-purple-600 font-medium mt-1">
+          <div className="text-[11px] text-purple-400 font-medium mt-1">
             Presidio & detect-secrets active
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200">
+        <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500">Audit Trail Events</span>
-            <History className="w-4 h-4 text-amber-600" />
+            <span className="text-xs font-semibold text-slate-400">Audit Trail Events</span>
+            <History className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="mt-2 text-2xl font-bold text-slate-900">
+          <div className="mt-2 text-2xl font-bold text-white">
             {healthData?.audit_trail_summary?.total_audit_events ?? auditLogs.length}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-400 mt-1">
             Append-only immutable log
           </div>
         </div>
       </div>
 
       {/* Tabs Navigation */}
-      <div className="border-b border-slate-200">
-        <div className="flex space-x-6 text-xs font-semibold">
+      <div className="border-b border-slate-800">
+        <div className="flex space-x-6 text-xs font-semibold overflow-x-auto">
           <button
             onClick={() => setActiveTab("suite")}
             className={`pb-3 flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === "suite"
-                ? "border-brand-blue text-brand-blue"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Automated Security Suite</span>
             {testResults && (
-              <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800">
+              <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
                 {testResults.passed_tests}/{testResults.total_tests}
               </span>
             )}
@@ -222,8 +222,8 @@ export default function SecurityControlPage() {
             onClick={() => setActiveTab("auth")}
             className={`pb-3 flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === "auth"
-                ? "border-brand-blue text-brand-blue"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Lock className="w-3.5 h-3.5" />
@@ -234,8 +234,8 @@ export default function SecurityControlPage() {
             onClick={() => setActiveTab("rbac")}
             className={`pb-3 flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === "rbac"
-                ? "border-brand-blue text-brand-blue"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Users className="w-3.5 h-3.5" />
@@ -246,8 +246,8 @@ export default function SecurityControlPage() {
             onClick={() => setActiveTab("privacy")}
             className={`pb-3 flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === "privacy"
-                ? "border-brand-blue text-brand-blue"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <EyeOff className="w-3.5 h-3.5" />
@@ -258,8 +258,8 @@ export default function SecurityControlPage() {
             onClick={() => setActiveTab("audit")}
             className={`pb-3 flex items-center gap-1.5 transition-colors border-b-2 ${
               activeTab === "audit"
-                ? "border-brand-blue text-brand-blue"
-                : "border-transparent text-slate-500 hover:text-slate-800"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <History className="w-3.5 h-3.5" />
@@ -271,14 +271,14 @@ export default function SecurityControlPage() {
       {/* Tab 1: Automated Security Suite */}
       {activeTab === "suite" && (
         <div className="space-y-4">
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-800/60 flex items-center justify-center text-blue-400 shrink-0 mt-0.5">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-slate-900">Verifiable Automated Security Test Suite</h4>
-                <p className="text-[11px] text-slate-500 mt-0.5">
+                <h4 className="text-xs font-bold text-white">Verifiable Automated Security Test Suite</h4>
+                <p className="text-[11px] text-slate-400 mt-0.5">
                   Executes 8 live security assertions covering Argon2id/Bcrypt hashing, JWT revocation, self-escalation blocks, prompt injection containment, canary shielding, and quote verification.
                 </p>
               </div>
@@ -286,7 +286,7 @@ export default function SecurityControlPage() {
             <button
               onClick={handleRunSecurityTests}
               disabled={runningTests}
-              className="px-3 py-1.5 bg-brand-blue text-white hover:bg-brand-dark rounded-lg text-xs font-semibold transition-colors shrink-0"
+              className="px-3 py-1.5 bg-blue-600 text-white hover:bg-blue-500 rounded-lg text-xs font-semibold transition-colors shrink-0"
             >
               {runningTests ? "Simulating..." : "Execute Test Suite"}
             </button>
@@ -353,32 +353,32 @@ export default function SecurityControlPage() {
             ]).map((test: any) => (
               <div
                 key={test.test_id}
-                className="bg-white border border-slate-200 rounded-xl p-3.5 flex items-start justify-between gap-4 hover:border-slate-300 transition-colors"
+                className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex items-start justify-between gap-4 hover:border-slate-700 transition-colors"
               >
                 <div className="flex items-start gap-3">
                   {test.passed ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                   ) : (
-                    <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+                    <XCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                   )}
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700 px-1.5 py-0.5 rounded">
                         {test.test_id}
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                         {test.category}
                       </span>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-900 mt-1">{test.title}</h4>
-                    <p className="text-[11px] text-slate-600 mt-0.5">{test.details}</p>
+                    <h4 className="text-xs font-bold text-white mt-1">{test.title}</h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5">{test.details}</p>
                   </div>
                 </div>
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0 ${
                     test.passed
-                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                      : "bg-rose-50 text-rose-700 border border-rose-200"
+                      ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800"
+                      : "bg-rose-950/80 text-rose-400 border border-rose-800"
                   }`}
                 >
                   {test.passed ? "PASSED" : "FAILED"}
@@ -393,52 +393,52 @@ export default function SecurityControlPage() {
       {activeTab === "auth" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-brand-blue" />
-                <h4 className="text-xs font-bold text-slate-900">Account Security Configuration</h4>
+                <Lock className="w-4 h-4 text-blue-400" />
+                <h4 className="text-xs font-bold text-white">Account Security Configuration</h4>
               </div>
               <div className="space-y-2 text-xs">
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500">Password Hashing</span>
-                  <span className="font-semibold text-slate-900">Argon2id / Bcrypt + Salt</span>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Password Hashing</span>
+                  <span className="font-semibold text-white">Argon2id / Bcrypt + Salt</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500">Brute-Force Lockout</span>
-                  <span className="font-semibold text-slate-900">5 failed attempts &rarr; 15 min lock</span>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Brute-Force Lockout</span>
+                  <span className="font-semibold text-white">5 failed attempts &rarr; 15 min lock</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500">Session Token Storage</span>
-                  <span className="font-semibold text-slate-900">Secure JWT with jti + iat validation</span>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Session Token Storage</span>
+                  <span className="font-semibold text-white">Secure JWT with jti + iat validation</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500">User Enumeration Shield</span>
-                  <span className="font-semibold text-slate-900">Active (Constant-time responses)</span>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">User Enumeration Shield</span>
+                  <span className="font-semibold text-white">Active (Constant-time responses)</span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-500">Email Verification</span>
-                  <span className="font-semibold text-emerald-600">Enforced for new accounts</span>
+                  <span className="text-slate-400">Email Verification</span>
+                  <span className="font-semibold text-emerald-400">Enforced for new accounts</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-brand-blue" />
-                <h4 className="text-xs font-bold text-slate-900">Global Session Revocation</h4>
+                <Key className="w-4 h-4 text-blue-400" />
+                <h4 className="text-xs font-bold text-white">Global Session Revocation</h4>
               </div>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-400">
                 In the event of suspected credential compromise or team member departure, invalidate all currently issued JWT sessions immediately.
               </p>
               {revocationMessage && (
-                <div className="p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
+                <div className="p-2 bg-blue-950/60 border border-blue-800 rounded text-xs text-blue-300">
                   {revocationMessage}
                 </div>
               )}
               <button
                 onClick={handleRevokeSessions}
                 disabled={revokingSessions}
-                className="w-full py-2 bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 rounded-lg text-xs font-semibold transition-colors"
+                className="w-full py-2 bg-rose-950/40 text-rose-300 border border-rose-800 hover:bg-rose-900/50 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
               >
                 {revokingSessions ? "Revoking All Active Tokens..." : "Revoke All Active Sessions"}
               </button>
@@ -450,16 +450,16 @@ export default function SecurityControlPage() {
       {/* Tab 3: Role-Based Access Control (RBAC) */}
       {activeTab === "rbac" && (
         <div className="space-y-4">
-          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-            <div className="p-4 border-b border-slate-200">
-              <h4 className="text-xs font-bold text-slate-900">Role Clearance & Permission Matrix</h4>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="p-4 border-b border-slate-800">
+              <h4 className="text-xs font-bold text-white">Role Clearance & Permission Matrix</h4>
+              <p className="text-[11px] text-slate-400 mt-0.5">
                 Permissions are strictly validated at both the FastAPI router layer and PostgreSQL Row-Level query boundary.
               </p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
+                <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
                   <tr>
                     <th className="py-2.5 px-4 font-semibold">Capability</th>
                     <th className="py-2.5 px-3 font-semibold text-center">Admin</th>
@@ -469,54 +469,54 @@ export default function SecurityControlPage() {
                     <th className="py-2.5 px-3 font-semibold text-center">Restricted</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-800 text-slate-300">
                   <tr>
-                    <td className="py-2.5 px-4 font-medium text-slate-800">Create Project & Ingest Sources</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
+                    <td className="py-2.5 px-4 font-medium text-white">Create Project & Ingest Sources</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-medium text-slate-800">Complete Gap Interview</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
+                    <td className="py-2.5 px-4 font-medium text-white">Complete Gap Interview</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-medium text-slate-800">Accept / Reject / Edit Claims</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
+                    <td className="py-2.5 px-4 font-medium text-white">Accept / Reject / Edit Claims</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-medium text-slate-800">Approve Handover Packet</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
+                    <td className="py-2.5 px-4 font-medium text-white">Approve Handover Packet</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-medium text-slate-800">View Confidential / Restricted Claims</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-rose-500 font-bold">Blocked</td>
+                    <td className="py-2.5 px-4 font-medium text-white">View Confidential / Restricted Claims</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-rose-400 font-bold">Blocked</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-medium text-slate-800">Manage User Roles & Security Config</td>
-                    <td className="py-2.5 px-3 text-center text-emerald-600 font-bold">&check;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
-                    <td className="py-2.5 px-3 text-center text-slate-300">&times;</td>
+                    <td className="py-2.5 px-4 font-medium text-white">Manage User Roles & Security Config</td>
+                    <td className="py-2.5 px-3 text-center text-emerald-400 font-bold">&check;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
+                    <td className="py-2.5 px-3 text-center text-slate-600">&times;</td>
                   </tr>
                 </tbody>
               </table>
@@ -529,24 +529,24 @@ export default function SecurityControlPage() {
       {activeTab === "privacy" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-2">
-              <span className="text-xs font-semibold text-slate-500">PII Detection Engine</span>
-              <div className="text-lg font-bold text-slate-900">Microsoft Presidio</div>
-              <p className="text-[11px] text-slate-500">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+              <span className="text-xs font-semibold text-slate-400">PII Detection Engine</span>
+              <div className="text-lg font-bold text-white">Microsoft Presidio</div>
+              <p className="text-[11px] text-slate-400">
                 Scans uploaded source files for names, email addresses, phone numbers, and SSNs prior to embedding generation.
               </p>
             </div>
-            <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-2">
-              <span className="text-xs font-semibold text-slate-500">Secret & Credential Shield</span>
-              <div className="text-lg font-bold text-slate-900">detect-secrets + Entropy</div>
-              <p className="text-[11px] text-slate-500">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+              <span className="text-xs font-semibold text-slate-400">Secret & Credential Shield</span>
+              <div className="text-lg font-bold text-white">detect-secrets + Entropy</div>
+              <p className="text-[11px] text-slate-400">
                 Detects AWS access keys, GitHub personal tokens, private RSA keys, and database connection strings.
               </p>
             </div>
-            <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-2">
-              <span className="text-xs font-semibold text-slate-500">Prompt Injection Boundary</span>
-              <div className="text-lg font-bold text-slate-900">Untrusted Data Isolation</div>
-              <p className="text-[11px] text-slate-500">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+              <span className="text-xs font-semibold text-slate-400">Prompt Injection Boundary</span>
+              <div className="text-lg font-bold text-white">Untrusted Data Isolation</div>
+              <p className="text-[11px] text-slate-400">
                 Source snippets are encased in explicit boundary tags; user instructions cannot hijack system persona or policy.
               </p>
             </div>
@@ -559,24 +559,24 @@ export default function SecurityControlPage() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="relative w-full sm:w-80">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-3" />
               <input
                 type="text"
                 placeholder="Search audit trail by actor, action..."
                 value={auditSearch}
                 onChange={(e) => setAuditSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue/20"
+                className="w-full pl-8 pr-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-medium"
               />
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-400">
               Showing {filteredAuditLogs.length} audit entries
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
+                <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
                   <tr>
                     <th className="py-2.5 px-4 font-semibold">Timestamp</th>
                     <th className="py-2.5 px-4 font-semibold">Actor</th>
@@ -585,7 +585,7 @@ export default function SecurityControlPage() {
                     <th className="py-2.5 px-4 font-semibold">IP Address</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-800">
                   {filteredAuditLogs.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-8 text-center text-slate-400">
@@ -594,20 +594,20 @@ export default function SecurityControlPage() {
                     </tr>
                   ) : (
                     filteredAuditLogs.map((log) => (
-                      <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="py-2.5 px-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">
+                      <tr key={log.id} className="hover:bg-slate-800/40 transition-colors">
+                        <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
                           {log.created_at ? new Date(log.created_at).toLocaleString() : "Recent"}
                         </td>
                         <td className="py-2.5 px-4">
-                          <div className="font-semibold text-slate-900">{log.user_name || "System"}</div>
-                          <div className="text-[10px] text-slate-500">{log.user_email || "automated"}</div>
+                          <div className="font-semibold text-white">{log.user_name || "System"}</div>
+                          <div className="text-[10px] text-slate-400">{log.user_email || "automated"}</div>
                         </td>
                         <td className="py-2.5 px-4">
-                          <span className="font-mono text-[11px] font-semibold text-brand-blue bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                          <span className="font-mono text-[11px] font-semibold text-blue-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
                             {log.action}
                           </span>
                         </td>
-                        <td className="py-2.5 px-4 text-slate-700 font-medium capitalize">
+                        <td className="py-2.5 px-4 text-slate-300 font-medium capitalize">
                           {log.target_type || "claim"}
                         </td>
                         <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">
