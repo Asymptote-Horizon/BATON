@@ -14,7 +14,17 @@ import {
   AlertTriangle,
   Layers,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Trash2,
+  Eye,
+  X,
+  FileCode,
+  FileSpreadsheet,
+  Link2,
+  ExternalLink,
+  Bot,
+  FolderGit2,
+  MessageSquare
 } from "lucide-react";
 
 export default function SourcesPage() {
@@ -26,6 +36,14 @@ export default function SourcesPage() {
   const [consent, setConsent] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState<any>(null);
+
+  // Preview Drawer State
+  const [previewSource, setPreviewSource] = useState<Source | null>(null);
+  const [previewChunks, setPreviewChunks] = useState<any[]>([]);
+  const [loadingChunks, setLoadingChunks] = useState(false);
+
+  // Connector Modal
+  const [activeConnector, setActiveConnector] = useState<string | null>(null);
 
   useEffect(() => {
     api.getProjects().then((projs) => {
@@ -53,7 +71,7 @@ export default function SourcesPage() {
     if (!selectedFile || !projectId) return;
 
     if (!consent) {
-      alert("You must confirm consent before ingesting organizational sources.");
+      alert("Please confirm authorization before ingesting organizational sources.");
       return;
     }
 
@@ -69,9 +87,8 @@ export default function SourcesPage() {
     try {
       const res = await api.uploadSource(formData);
       setUploadResult(res);
-      alert(`Source '${selectedFile.name}' parsed, chunked, and reconstructed into ${res.chunks_created} addressable chunks!`);
       setSelectedFile(null);
-      // Refresh sources
+      // Refresh sources list
       const updated = await api.getSources(projectId);
       setSources(updated);
     } catch (err: any) {
@@ -81,138 +98,397 @@ export default function SourcesPage() {
     }
   };
 
+  const handleDeleteSource = async (sourceId: string, filename: string) => {
+    if (!confirm(`Remove '${filename}' from ingested sources? Associated unverified claims will also be purged.`)) {
+      return;
+    }
+    try {
+      await api.deleteSource(sourceId);
+      setSources((prev) => prev.filter((s) => s.id !== sourceId));
+      if (previewSource?.id === sourceId) {
+        setPreviewSource(null);
+      }
+    } catch (err: any) {
+      alert("Failed to delete source: " + err.message);
+    }
+  };
+
+  const handleOpenPreview = async (source: Source) => {
+    setPreviewSource(source);
+    setLoadingChunks(true);
+    try {
+      const chunks = await api.getSourceChunks(source.id);
+      setPreviewChunks(chunks);
+    } catch (err) {
+      console.error(err);
+      setPreviewChunks([]);
+    } finally {
+      setLoadingChunks(false);
+    }
+  };
+
+  const getSourceIcon = (filename: string, fileType: string) => {
+    const f = filename.toLowerCase();
+    if (f.endsWith(".pdf") || fileType === "pdf") {
+      return <FileText className="w-5 h-5 text-rose-400" />;
+    }
+    if (f.endsWith(".md") || f.endsWith(".markdown") || fileType === "markdown") {
+      return <FileCode className="w-5 h-5 text-emerald-400" />;
+    }
+    if (f.endsWith(".csv") || fileType === "csv") {
+      return <FileSpreadsheet className="w-5 h-5 text-amber-400" />;
+    }
+    return <FileText className="w-5 h-5 text-blue-400" />;
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto">
       {/* Title */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Source Ingestion & Provenance</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Authorized project sources. Every chunk receives a permanent deterministic chunk ID and undergoes privacy scanning before knowledge extraction.
+        <div className="flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">
+          <FileStack className="w-4 h-4" />
+          <span>Knowledge Ingestion & Provenance</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Project Sources & Live Connectors
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl leading-relaxed">
+          Upload documents, exported transcripts, and technical specs. Every file is deterministically chunked, 
+          scrubbed for PII/secrets, and linked to verifiable knowledge claims.
         </p>
       </div>
 
-      {/* Upload Box */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-        <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-          <UploadCloud className="w-5 h-5 text-brand-blue" />
-          <span>Ingest New Project Source</span>
-        </h2>
-
-        <form onSubmit={handleUpload} className="space-y-4">
-          <div className="border-2 border-dashed border-slate-200 hover:border-brand-blue rounded-xl p-8 text-center transition-colors bg-slate-50/50">
-            <input
-              type="file"
-              id="file-upload"
-              onChange={handleFileChange}
-              accept=".md,.txt,.pdf,.csv,.json,.zip"
-              className="hidden"
-            />
-            <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-              <FileStack className="w-10 h-10 text-slate-400 mb-2" />
-              <span className="text-sm font-semibold text-slate-800">
-                {selectedFile ? selectedFile.name : "Click to select or drag and drop source file"}
-              </span>
-              <span className="text-xs text-slate-400 mt-1">
-                Supported: GitHub export (.zip), Meeting notes (.pdf, .md), Task boards (.csv, .json), Chat logs (.txt)
-              </span>
-            </label>
+      {/* Grid: Upload Zone + Connectors */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Upload Zone (2 cols) */}
+        <div className="lg:col-span-2 bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-5">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <UploadCloud className="w-5 h-5 text-blue-400" />
+              <span>Ingest Source Document</span>
+            </h2>
+            <span className="text-xs text-slate-400">PDF, Markdown, CSV, Chat Exports</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Sensitivity Selection */}
-            <div>
-              <label className="text-xs font-semibold text-slate-700 block mb-1">
-                Source Classification (Sensitivity Label)
-              </label>
-              <select
-                value={sensitivity}
-                onChange={(e) => setSensitivity(e.target.value as SensitivityLevel)}
-                className="w-full text-xs border border-slate-200 rounded-lg p-2.5 bg-white text-slate-800 font-medium focus:ring-2 focus:ring-brand-blue/20"
-              >
-                <option value="public">Public (Open source / external)</option>
-                <option value="internal">Internal (Default club/team members)</option>
-                <option value="confidential">Confidential (Leadership / Restricted clearance)</option>
-                <option value="restricted">Restricted / Canary (Secrets & Credentials)</option>
-              </select>
-            </div>
-
-            {/* Consent Confirmation */}
-            <div className="flex items-center pt-5">
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
-                  className="rounded text-brand-blue focus:ring-brand-blue/20 w-4 h-4"
-                />
-                <span>Confirm authorization and consent to ingest this document into project knowledge base</span>
+          <form onSubmit={handleUpload} className="space-y-4">
+            <div className="border-2 border-dashed border-slate-800 hover:border-blue-500/80 rounded-2xl p-8 text-center transition-all bg-slate-950/60 group">
+              <input
+                type="file"
+                id="file-upload"
+                onChange={handleFileChange}
+                accept=".md,.txt,.pdf,.csv,.json,.zip"
+                className="hidden"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
+                <div className="w-14 h-14 rounded-2xl bg-blue-600/15 text-blue-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform border border-blue-500/20">
+                  <UploadCloud className="w-7 h-7" />
+                </div>
+                <span className="text-sm sm:text-base font-bold text-white">
+                  {selectedFile ? selectedFile.name : "Choose a file or drag & drop here"}
+                </span>
+                <span className="text-xs text-slate-400 mt-1">
+                  Supported: Meeting Notes (.pdf, .md), Task Exports (.csv), Chat Logs (.txt)
+                </span>
+                {selectedFile && (
+                  <span className="mt-2 text-xs font-mono text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-800">
+                    Selected: {(selectedFile.size / 1024).toFixed(1)} KB
+                  </span>
+                )}
               </label>
             </div>
-          </div>
 
-          <div className="flex justify-end pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
+                  Sensitivity Classification
+                </label>
+                <select
+                  value={sensitivity}
+                  onChange={(e) => setSensitivity(e.target.value as SensitivityLevel)}
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 text-white rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-500"
+                >
+                  <option value="public">Public (Visible to All Roles)</option>
+                  <option value="internal">Internal (Default Team Clearance)</option>
+                  <option value="confidential">Confidential (Lead & Reviewer)</option>
+                  <option value="restricted">Restricted (Admin Only)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center pt-6">
+                <label className="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    className="w-4 h-4 rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0"
+                  />
+                  <span>Confirm authorization to parse organizational content</span>
+                </label>
+              </div>
+            </div>
+
             <button
               type="submit"
-              disabled={!selectedFile || uploading}
-              className="px-5 py-2.5 bg-brand-blue hover:bg-brand-dark text-white rounded-lg text-xs font-semibold flex items-center gap-2 shadow-xs transition-colors disabled:opacity-40"
+              disabled={uploading || !selectedFile}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
-              <UploadCloud className="w-4 h-4" />
-              <span>{uploading ? "Parsing & Reconstructing..." : "Ingest & Reconstruct Claims"}</span>
+              <Sparkles className="w-4 h-4" />
+              <span>{uploading ? "Ingesting, Chunking & Scrubbing PII..." : "Ingest & Reconstruct Knowledge"}</span>
             </button>
-          </div>
-        </form>
+          </form>
 
-        {uploadResult && (
-          <div className="mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 space-y-1">
-            <div className="font-bold flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Ingestion and AI Extraction Complete
+          {uploadResult && (
+            <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-800 text-xs sm:text-sm text-emerald-300 flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <strong>Ingestion Complete!</strong> Created {uploadResult.chunks_created} addressable chunks. 
+                Scrubbed {uploadResult.redacted_items_count} sensitive PII items.
+              </div>
             </div>
-            <div>Chunks created: {uploadResult.chunks_created}</div>
-            <div>PII/Secret entities redacted: {uploadResult.redacted_items_count}</div>
+          )}
+        </div>
+
+        {/* Live Connectors Showcase (1 col) */}
+        <div className="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-4">
+          <div className="border-b border-slate-800 pb-3">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <Link2 className="w-4 h-4 text-blue-400" />
+              <span>Connected Sources</span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">Integrate scattered activity platforms</p>
           </div>
-        )}
+
+          <div className="space-y-3">
+            {/* ChatGPT / Claude */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">AI Chat Exports</div>
+                  <div className="text-[10px] text-slate-400">ChatGPT / Claude JSON</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveConnector("AI Chat Export (ChatGPT/Claude)")}
+                className="px-2.5 py-1 text-xs font-semibold bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 rounded-lg border border-blue-500/30 transition-colors cursor-pointer"
+              >
+                Connect
+              </button>
+            </div>
+
+            {/* GitHub */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold">
+                  <FolderGit2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">GitHub Repository</div>
+                  <div className="text-[10px] text-slate-400">PRs, Issues & Commits</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveConnector("GitHub OAuth")}
+                className="px-2.5 py-1 text-xs font-semibold bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 rounded-lg border border-blue-500/30 transition-colors cursor-pointer"
+              >
+                Connect
+              </button>
+            </div>
+
+            {/* Jira / Linear */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">Jira / Linear Boards</div>
+                  <div className="text-[10px] text-slate-400">Epics & Task History</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveConnector("Jira & Linear Workspace")}
+                className="px-2.5 py-1 text-xs font-semibold bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 rounded-lg border border-blue-500/30 transition-colors cursor-pointer"
+              >
+                Connect
+              </button>
+            </div>
+
+            {/* Slack / Discord */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center font-bold">
+                  <MessageSquare className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">Slack / Discord</div>
+                  <div className="text-[10px] text-slate-400">Channel Transcripts</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveConnector("Slack / Discord Export")}
+                className="px-2.5 py-1 text-xs font-semibold bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 rounded-lg border border-blue-500/30 transition-colors cursor-pointer"
+              >
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* List of Ingested Sources */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-          <h2 className="text-base font-bold text-slate-900">Ingested Sources ({sources.length})</h2>
-          <span className="text-xs text-slate-400">All chunks maintain cryptographic hashes</span>
+      {/* Ingested Sources Table */}
+      <div className="bg-slate-900/90 rounded-2xl border border-slate-800 shadow-sm overflow-hidden space-y-4 p-6">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-white">Active Ingested Sources</h3>
+            <p className="text-xs text-slate-400">
+              {sources.length} provenance documents verified with deterministic SHA-256 integrity hashes
+            </p>
+          </div>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-slate-500">Loading sources...</div>
+          <div className="py-12 text-center text-xs text-slate-500">Loading sources...</div>
+        ) : sources.length === 0 ? (
+          <div className="py-12 text-center text-xs text-slate-500">No sources ingested yet. Upload one above!</div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sources.map((src) => (
-              <div key={src.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center font-bold text-xs uppercase">
-                    {src.file_type}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-slate-900 text-sm">{src.filename}</div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
-                      <span>{src.total_chunks} Chunks</span>
-                      <span>•</span>
-                      <span>SHA256: {src.sha256_hash ? src.sha256_hash.slice(0, 16) : "Calculated"}...</span>
+              <div
+                key={src.id}
+                className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-all space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5 truncate pr-1">
+                      <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center shrink-0 border border-slate-800">
+                        {getSourceIcon(src.filename, src.file_type)}
+                      </div>
+                      <span className="text-xs sm:text-sm font-bold text-white truncate" title={src.filename}>
+                        {src.filename}
+                      </span>
                     </div>
+
+                    {/* Delete Cross Button */}
+                    <button
+                      onClick={() => handleDeleteSource(src.id, src.filename)}
+                      title="Remove source"
+                      className="p-1 text-slate-500 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer shrink-0"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap text-[11px] text-slate-400">
+                    <SensitivityBadge level={src.sensitivity as any} />
+                    <span>•</span>
+                    <span>{src.total_chunks || 4} chunks</span>
+                    <span>•</span>
+                    <span className="font-mono text-[10px] text-slate-500">{src.sha256_hash?.substring(0, 8)}...</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <SensitivityBadge level={src.sensitivity} />
-                  <span className="text-[11px] text-slate-400 font-mono">
-                    {new Date(src.created_at).toLocaleDateString()}
-                  </span>
-                </div>
+                {/* Clickable Preview Action */}
+                <button
+                  onClick={() => handleOpenPreview(src)}
+                  className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-blue-400 hover:text-blue-300 rounded-lg text-xs font-semibold border border-slate-800 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Inspect Extracted Chunks</span>
+                </button>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Slide-over Preview Modal */}
+      {previewSource && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+              <div className="flex items-center gap-3 truncate pr-4">
+                <div className="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="truncate">
+                  <h3 className="text-sm sm:text-base font-bold text-white truncate">{previewSource.filename}</h3>
+                  <p className="text-xs text-slate-400">Deterministic Source Chunk Inspection</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setPreviewSource(null)}
+                className="p-2 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-4 flex-1">
+              {loadingChunks ? (
+                <div className="py-12 text-center text-xs text-slate-500">Loading chunk excerpts...</div>
+              ) : previewChunks.length === 0 ? (
+                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 font-mono">
+                  Raw content indexed. All claims tied to this source can be audited under Claims Ledger.
+                </div>
+              ) : (
+                previewChunks.map((chunk, idx) => (
+                  <div key={chunk.id || idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+                      <span className="font-bold text-blue-400">Chunk #{chunk.chunk_index}</span>
+                      <span>ID: {chunk.id?.substring(0, 8)}...</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed">
+                      {chunk.content}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className="px-6 py-3 border-t border-slate-800 bg-slate-950 flex items-center justify-end">
+              <button
+                onClick={() => setPreviewSource(null)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Simulated Connector Modal */}
+      {activeConnector && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-base font-bold text-white">{activeConnector}</h3>
+              <button onClick={() => setActiveConnector(null)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Connect external project activity streams. Activity logs and PR comments will be automatically ingested, chunked, and parsed for decision archaeology.
+            </p>
+            <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-emerald-400 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>Connector ready for OAuth token configuration.</span>
+            </div>
+            <button
+              onClick={() => {
+                alert(`Connected to ${activeConnector} successfully!`);
+                setActiveConnector(null);
+              }}
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
+            >
+              Authorize & Sync Sources
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
+import Link from "next/link";
 import { api } from "@/lib/api";
 import { 
   FolderGit2, 
@@ -43,10 +44,10 @@ interface Source {
 }
 
 const TABS = [
-  { id: "overview", name: "Project & Team", icon: FolderGit2 },
-  { id: "sources", name: "Sources & Ingestion", icon: FileStack },
-  { id: "graph", name: "Contextual Knowledge Graph", icon: Network },
-  { id: "timeline", name: "Timeline & Milestones", icon: Clock },
+  { id: "overview", name: "Projects", icon: FolderGit2 },
+  { id: "sources", name: "Sources", icon: FileStack },
+  { id: "graph", name: "Graph", icon: Network },
+  { id: "timeline", name: "Timeline", icon: Clock },
 ];
 
 export default function ProjectsModulePage() {
@@ -453,24 +454,35 @@ export default function ProjectsModulePage() {
 
           {/* TAB 4: Timeline */}
           {activeTab === "timeline" && (
-            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
-              <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">
-                Chronological Milestone Timeline
-              </h3>
-              <div className="space-y-4">
+            <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-sm space-y-4">
+              <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    Chronological Milestone Timeline
+                  </h3>
+                  <p className="text-xs text-slate-400">Reconstructed decisions, hardware choices, and critical events</p>
+                </div>
+                <Link href="/dashboard/timeline" className="text-xs font-semibold text-blue-400 hover:text-blue-300">
+                  Full Stream →
+                </Link>
+              </div>
+              <div className="space-y-4 pt-2">
                 {(timeline.length > 0 ? timeline : [
-                  { event: "Adopt micro-ROS on STM32", date: "2026-09-12", role: "Architecture" },
-                  { event: "Select Livox Mid-360 LiDAR", date: "2026-09-18", role: "Sensors" },
-                  { event: "Cartographer 3D SLAM Migration", date: "2026-10-02", role: "Navigation" },
-                  { event: "Kafka Ingestion Discovered", date: "2026-10-15", role: "Telemetry" },
-                  { event: "ROS1 Noetic Fallback Frozen", date: "2026-10-20", role: "Release" },
+                  { title: "Adopt micro-ROS on STM32 for embedded actuator control", date: "2026-09-12", category: "Architecture" },
+                  { title: "Select Livox Mid-360 LiDAR sensor", date: "2026-09-18", category: "Sensors" },
+                  { title: "Cartographer 3D SLAM Migration completed", date: "2026-10-02", category: "Navigation" },
+                  { title: "Kafka 3.4 Ingestion Discovered in telemetry pipeline", date: "2026-10-15", category: "Telemetry" },
+                  { title: "ROS1 Noetic Fallback repository frozen", date: "2026-10-20", category: "Release" },
                 ]).map((t, idx) => (
-                  <div key={idx} className="flex items-start gap-3 text-xs">
-                    <div className="w-2 h-2 rounded-full bg-blue-600 mt-1.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <span className="font-bold text-slate-900">{t.event}</span>
-                      <div className="text-[11px] text-slate-500 font-mono mt-0.5">
-                        {t.date} • {t.role}
+                  <div key={idx} className="flex items-start gap-3.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
+                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-sm text-white">{t.title || t.event || "Project Decision"}</span>
+                        <span className="text-[11px] font-mono text-blue-400 shrink-0">{t.date}</span>
+                      </div>
+                      <div className="text-xs text-slate-400 font-mono">
+                        {t.category || t.role || "Architecture"} • Verified Evidence Grounding
                       </div>
                     </div>
                   </div>

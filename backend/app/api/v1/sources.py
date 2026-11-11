@@ -174,3 +174,16 @@ def get_source_chunks(source_id: str, db: Session = Depends(get_db), current_use
     chunks = db.query(SourceChunk).filter(SourceChunk.source_id == source_id).order_by(SourceChunk.chunk_index).all()
     return chunks
 
+@router.delete("/{source_id}")
+def delete_source(source_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    source = db.query(Source).filter(Source.id == source_id).first()
+    if not source:
+        raise HTTPException(status_code=404, detail="Source not found")
+    
+    # Delete associated chunks & source
+    db.query(SourceChunk).filter(SourceChunk.source_id == source_id).delete()
+    db.delete(source)
+    db.commit()
+    return {"message": "Source deleted successfully", "id": source_id}
+
+

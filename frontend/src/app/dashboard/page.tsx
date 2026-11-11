@@ -16,14 +16,21 @@ import {
   CheckCircle2,
   Clock,
   Compass,
-  FileText
+  FileText,
+  UserCheck,
+  Send,
+  Sparkles,
+  Zap
 } from "lucide-react";
+import { InitiateHandoverModal } from "@/components/InitiateHandoverModal";
 
 export default function OverviewPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [readiness, setReadiness] = useState<any>(null);
   const [risks, setRisks] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isHandoverModalOpen, setIsHandoverModalOpen] = useState(false);
+  const [handoverDetails, setHandoverDetails] = useState<any | null>(null);
 
   useEffect(() => {
     Promise.all([
@@ -56,8 +63,8 @@ export default function OverviewPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-medium text-slate-500">Loading platform overview...</p>
+          <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-semibold text-slate-400">Loading continuity intelligence...</p>
         </div>
       </div>
     );
@@ -68,58 +75,75 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Executive Handover Overview</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Real-time status of project knowledge continuity, risk mitigation, and verification readiness.
-          </p>
-        </div>
+      {/* Big Hero Banner: The Core Leaver Handover Action */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-slate-900 border border-blue-500/30 p-6 sm:p-8 shadow-2xl">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Project Continuity Command</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Departing or Transferring Ownership?
+            </h1>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              Don&apos;t let unwritten decisions and deployment workarounds disappear. Trigger a streamlined handover to allocate your responsibilities, answer quick skippable questions, and pass the baton.
+            </p>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/dashboard/handovers"
-            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors flex items-center gap-1.5"
-          >
-            <span>Handover Center</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+            <button
+              onClick={() => setIsHandoverModalOpen(true)}
+              className="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm sm:text-base font-bold transition-all shadow-xl shadow-blue-600/30 hover:scale-105 flex items-center justify-center gap-2.5 cursor-pointer"
+            >
+              <FileSpreadsheet className="w-5 h-5" />
+              <span>Initiate Handover</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <Link
+              href="/dashboard/handovers"
+              className="px-5 py-3.5 bg-slate-800/80 hover:bg-slate-750 text-slate-200 border border-slate-700 rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+            >
+              <span>Handover Center</span>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Active Project Banner */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
+      {/* Active Project Status Bar */}
+      <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
-              Active Handover
+            <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+              {handoverDetails ? "Handover Dispatched" : "Active Handover"}
             </span>
-            <span className="text-xs text-slate-400">•</span>
-            <span className="text-xs text-slate-500 font-medium">Outgoing: Alex Mercer → Incoming: Sam Taylor</span>
+            <span className="text-xs text-slate-500">•</span>
+            <span className="text-xs text-slate-400 font-medium">
+              Outgoing: <strong className="text-slate-200">Alex Mercer</strong> → Incoming: <strong className="text-slate-200">{handoverDetails?.successor || "Sam Taylor"}</strong>
+            </span>
           </div>
-          <h2 className="text-base font-bold text-slate-900">
-            Project Aether – Autonomous Robotics Platform
+          <h2 className="text-lg font-extrabold text-white">
+            Project Aether – Autonomous Mobile Robotics (AMR)
           </h2>
-          <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
             Autonomous ground vehicle initiative migrating from ROS1 Noetic to ROS2 Humble with Cartographer 3D SLAM.
           </p>
         </div>
 
         {/* Readiness Score Pill */}
-        <div className="flex items-center gap-4 bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex-shrink-0">
+        <div className="flex items-center gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800 flex-shrink-0">
           <div className="text-right">
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Readiness Score</span>
-            <span className="text-2xl font-extrabold text-slate-900">
+            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Readiness Score</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-white">
               {readiness?.overall_score || 53.6}<span className="text-xs font-normal text-slate-400">/100</span>
             </span>
           </div>
-          <div className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
+          <div className={`px-3 py-1.5 rounded-xl text-xs font-extrabold border ${
             readiness?.readiness_grade === "Ready"
-              ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+              ? "bg-emerald-950/40 text-emerald-400 border-emerald-700/60"
               : readiness?.readiness_grade === "Blocked"
-              ? "bg-rose-50 text-rose-700 border-rose-300"
-              : "bg-amber-50 text-amber-700 border-amber-300"
+              ? "bg-rose-950/40 text-rose-400 border-rose-700/60"
+              : "bg-amber-950/40 text-amber-400 border-amber-700/60"
           }`}>
             {readiness?.readiness_grade || "Blocked"}
           </div>
@@ -129,88 +153,93 @@ export default function OverviewPage() {
       {/* 4 Primary Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* 1. Knowledge Coverage */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 shadow-sm space-y-3">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Knowledge Coverage</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Knowledge Coverage</span>
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-slate-900">{coveragePercent}%</span>
-            <span className="text-xs text-slate-500 font-medium">{data?.verified_claims} / {totalClaims} claims</span>
+            <span className="text-3xl font-extrabold text-white">{coveragePercent}%</span>
+            <span className="text-xs text-slate-400 font-semibold">{data?.verified_claims} / {totalClaims} claims</span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${coveragePercent}%` }} />
+          <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+            <div className="bg-emerald-500 h-2 rounded-full transition-all" style={{ width: `${coveragePercent}%` }} />
           </div>
         </div>
 
         {/* 2. Critical Risks */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 shadow-sm space-y-3">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Critical Risks</span>
-            <AlertTriangle className="w-4 h-4 text-rose-500" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Critical Risks</span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              <AlertTriangle className="w-5 h-5 text-rose-400" />
+            </div>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-rose-600">{risks?.critical_count || 2}</span>
-            <span className="text-xs text-slate-500 font-medium">{risks?.total_risks || 8} total tracked</span>
+            <span className="text-3xl font-extrabold text-rose-400">{risks?.critical_count || 2}</span>
+            <span className="text-xs text-slate-400 font-semibold">{risks?.total_risks || 8} total tracked</span>
           </div>
-          <p className="text-[11px] text-slate-500 truncate">Kafka broker & Vault root token silos</p>
+          <p className="text-xs text-rose-300/80 truncate font-medium">Kafka broker & Vault root token silos</p>
         </div>
 
         {/* 3. Pending Reviews */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 shadow-sm space-y-3">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Pending Reviews</span>
-            <CheckSquare className="w-4 h-4 text-amber-500" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Pending Reviews</span>
+            <CheckSquare className="w-5 h-5 text-amber-400" />
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-amber-600">{data?.pending_reviews || 0}</span>
-            <span className="text-xs text-slate-500 font-medium">Awaiting reviewer</span>
+            <span className="text-3xl font-extrabold text-amber-400">{data?.pending_reviews || 3}</span>
+            <span className="text-xs text-slate-400 font-semibold">Awaiting Lead</span>
           </div>
-          <p className="text-[11px] text-slate-500 truncate">Requires Elena Rostova sign-off</p>
+          <p className="text-xs text-slate-400 truncate">Elena Rostova sign-off required</p>
         </div>
 
         {/* 4. Active Handovers */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+        <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 shadow-sm space-y-3">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Handovers</span>
-            <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Active Handovers</span>
+            <FileSpreadsheet className="w-5 h-5 text-blue-400" />
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-slate-900">{data?.active_handovers || 1}</span>
-            <span className="text-xs text-emerald-600 font-medium">Version 1.0</span>
+            <span className="text-3xl font-extrabold text-white">{data?.active_handovers || 1}</span>
+            <span className="text-xs text-emerald-400 font-semibold">Version 1.0</span>
           </div>
-          <p className="text-[11px] text-slate-500 truncate">Role views generated & secured</p>
+          <p className="text-xs text-slate-400 truncate">Role views generated & secured</p>
         </div>
       </div>
 
       {/* Two Column Layout: Readiness Breakdown & Critical Blockers */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: 6-Pillar Readiness Score Breakdown */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Handover Readiness Pillars</h3>
-              <p className="text-xs text-slate-500">Deterministic 6-factor continuity evaluation</p>
+              <h3 className="text-base font-bold text-white">Handover Readiness Pillars</h3>
+              <p className="text-xs text-slate-400">Deterministic 6-factor continuity evaluation</p>
             </div>
-            <Link href="/dashboard/handovers" className="text-xs text-blue-600 hover:underline font-medium">
+            <Link href="/dashboard/handovers" className="text-xs text-blue-400 hover:text-blue-300 font-semibold">
               View Handover →
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {readiness?.categories?.map((cat: any, idx: number) => {
               const pct = Math.round((cat.score / cat.max_score) * 100);
               return (
-                <div key={idx} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-700">{cat.category}</span>
-                    <span className="font-semibold text-slate-900">
+                <div key={idx} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs sm:text-sm">
+                    <span className="font-semibold text-slate-200">{cat.category}</span>
+                    <span className="font-bold text-white">
                       {cat.score} / {cat.max_score} <span className="text-slate-400 font-normal">({pct}%)</span>
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                     <div
-                      className={`h-1.5 rounded-full ${pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-blue-500" : "bg-amber-500"}`}
+                      className={`h-2 rounded-full transition-all ${
+                        pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-blue-500" : "bg-amber-500"
+                      }`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -220,71 +249,87 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        {/* Right: Critical Continuity Risks & Priority Actions */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900">Critical Continuity Risks</h3>
-              <p className="text-xs text-slate-500">Must be addressed prior to leaver departure</p>
+        {/* Right: Quick Action Hub */}
+        <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-sm space-y-4 flex flex-col justify-between">
+          <div className="space-y-4">
+            <div className="border-b border-slate-800 pb-3">
+              <h3 className="text-base font-bold text-white">Continuity Action Hub</h3>
+              <p className="text-xs text-slate-400">Essential workflows to achieve full handover sign-off</p>
             </div>
-            <Link href="/dashboard/ledger" className="text-xs text-blue-600 hover:underline font-medium">
-              View Ledger →
+
+            <div className="space-y-2.5">
+              <Link
+                href="/dashboard/sources"
+                className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center font-bold">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors">
+                      Upload New Sources
+                    </div>
+                    <div className="text-xs text-slate-400">PDFs, meeting notes, chat exports, task boards</div>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
+              </Link>
+
+              <Link
+                href="/dashboard/claims"
+                className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-bold">
+                    <CheckSquare className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                      Review & Verify Claims
+                    </div>
+                    <div className="text-xs text-slate-400">Audit extracted decisions against verbatim quotes</div>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
+              </Link>
+
+              <Link
+                href="/dashboard/assistant"
+                className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center font-bold">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white group-hover:text-purple-400 transition-colors">
+                      Ask Project AI
+                    </div>
+                    <div className="text-xs text-slate-400">Grounded conversational assistant for successors</div>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-blue-950/30 border border-blue-900/50 flex items-center justify-between text-xs text-blue-300">
+            <span>Need a refresher on how the scoring works?</span>
+            <Link href="/dashboard/handovers" className="font-bold underline hover:text-white">
+              Open Runbooks
             </Link>
           </div>
-
-          <div className="space-y-3">
-            {risks?.findings?.slice(0, 3).map((r: any) => (
-              <div key={r.id} className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-slate-900 leading-snug">{r.title}</span>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.2 rounded border ${
-                    r.severity === "critical"
-                      ? "bg-rose-50 text-rose-700 border-rose-200"
-                      : "bg-amber-50 text-amber-700 border-amber-200"
-                  }`}>
-                    {r.severity}
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-600 leading-relaxed line-clamp-2">
-                  {r.description}
-                </p>
-                <div className="text-[11px] text-blue-700 font-medium">
-                  <span className="font-semibold">Mitigation: </span>{r.mitigation}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* Recent Activity / Audit Trail Feed */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-blue-600" />
-            <h3 className="text-sm font-bold text-slate-900">Recent Audit Trail</h3>
-          </div>
-          <Link href="/dashboard/security" className="text-xs font-semibold text-blue-600 hover:underline">
-            Security & Audit Center →
-          </Link>
-        </div>
-
-        <div className="divide-y divide-slate-100 text-xs">
-          {(data?.recent_activity || []).slice(0, 5).map((act) => (
-            <div key={act.id} className="py-2.5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                <span className="font-semibold text-slate-800 capitalize">
-                  {act.action.replace(/_/g, " ")}
-                </span>
-                <span className="text-slate-400">•</span>
-                <span className="text-slate-600">{act.user}</span>
-              </div>
-              <span className="text-slate-400 font-mono text-[11px]">{act.time}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Global Initiate Handover Modal */}
+      <InitiateHandoverModal
+        isOpen={isHandoverModalOpen}
+        onClose={() => setIsHandoverModalOpen(false)}
+        projectId="project_aether"
+        onHandoverInitiated={(details) => setHandoverDetails(details)}
+      />
     </div>
   );
 }

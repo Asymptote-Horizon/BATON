@@ -25,10 +25,10 @@ import {
 } from "lucide-react";
 
 const TABS = [
-  { id: "ledger", name: "Claims Ledger", icon: Layers },
-  { id: "evidence", name: "Split Evidence Viewer", icon: SearchCode },
-  { id: "conflicts", name: "Conflicts & Gaps", icon: AlertTriangle },
-  { id: "decisions", name: "Decision Archaeology", icon: Compass },
+  { id: "ledger", name: "Claims", icon: Layers },
+  { id: "evidence", name: "Evidence", icon: SearchCode },
+  { id: "conflicts", name: "Gaps & Conflicts", icon: AlertTriangle },
+  { id: "decisions", name: "Decisions", icon: Compass },
 ];
 
 export default function KnowledgeLedgerPage() {

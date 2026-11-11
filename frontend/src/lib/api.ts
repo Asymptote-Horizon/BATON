@@ -201,6 +201,16 @@ class ApiClient {
     });
   }
 
+  async deleteSource(sourceId: string) {
+    return this.request<any>(`/sources/${sourceId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async getSourceChunks(sourceId: string) {
+    return this.request<any[]>(`/sources/${sourceId}/chunks`);
+  }
+
   // Claims
   async getClaims(projectId: string, params: Record<string, string> = {}) {
     const query = new URLSearchParams(params).toString();

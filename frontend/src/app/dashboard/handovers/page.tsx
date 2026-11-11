@@ -26,9 +26,11 @@ import {
 } from "lucide-react";
 import { StatusBadge } from "@/components/StatusBadge";
 import { SensitivityBadge } from "@/components/SensitivityBadge";
+import { CompanyTemplateView } from "@/components/CompanyTemplateView";
 
 const TABS = [
   { id: "packets", name: "Handover Packets", icon: FileSpreadsheet },
+  { id: "templates", name: "Company Templates", icon: FileText },
   { id: "missions", name: "Successor Missions", icon: Target },
   { id: "assistant", name: "Ask Project AI", icon: Sparkles },
   { id: "review", name: "Human Review", icon: CheckSquare },
@@ -220,24 +222,24 @@ export default function HandoverCenterPage() {
           {/* TAB 1: Handover Packets */}
           {activeTab === "packets" && (
             <div className="space-y-6">
-              <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-sm space-y-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-950/40 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800">
                         Version 1.0 (Published)
                       </span>
                       <span className="text-xs text-slate-400">•</span>
-                      <span className="text-xs text-slate-500 font-mono">Compiled by Sarah Chen (Admin)</span>
+                      <span className="text-xs text-slate-400 font-mono">Compiled by Sarah Chen (Admin)</span>
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 mt-1">
+                    <h3 className="text-base font-bold text-white mt-1">
                       Project Aether – Knowledge Handover Packet
                     </h3>
                   </div>
 
                   <button
                     onClick={() => setActiveTab("receipt")}
-                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs"
+                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow-sm cursor-pointer"
                   >
                     Acknowledge & Sign Receipt →
                   </button>
@@ -245,30 +247,30 @@ export default function HandoverCenterPage() {
 
                 {/* Continuation Plan */}
                 <div className="space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">
                     Successor Continuation Action Plan
                   </span>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                      <span className="font-bold text-blue-700 block uppercase text-[10px] tracking-wider">Day 1 Priority</span>
-                      <p className="font-bold text-slate-900">Setup Dev Environment & Vault Credentials</p>
-                      <p className="text-slate-600 leading-relaxed text-[11px]">
+                    <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                      <span className="font-bold text-blue-400 block uppercase text-[10px] tracking-wider">Day 1 Priority</span>
+                      <p className="font-bold text-white">Setup Dev Environment & Vault Credentials</p>
+                      <p className="text-slate-400 leading-relaxed text-[11px]">
                         Clone repo, run `./scripts/setup_env.sh`, and coordinate Vault unseal ceremony with Sarah.
                       </p>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                      <span className="font-bold text-indigo-700 block uppercase text-[10px] tracking-wider">Week 1 Milestone</span>
-                      <p className="font-bold text-slate-900">Verify Sensor Calibration & SLAM Node</p>
-                      <p className="text-slate-600 leading-relaxed text-[11px]">
+                    <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                      <span className="font-bold text-indigo-400 block uppercase text-[10px] tracking-wider">Week 1 Milestone</span>
+                      <p className="font-bold text-white">Verify Sensor Calibration & SLAM Node</p>
+                      <p className="text-slate-400 leading-relaxed text-[11px]">
                         Execute Livox Mid-360 pointcloud filters and test loop closure in indoor test arena.
                       </p>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                      <span className="font-bold text-emerald-700 block uppercase text-[10px] tracking-wider">Day 30 Target</span>
-                      <p className="font-bold text-slate-900">Autonomous Package Delivery Run</p>
-                      <p className="text-slate-600 leading-relaxed text-[11px]">
+                    <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                      <span className="font-bold text-emerald-400 block uppercase text-[10px] tracking-wider">Day 30 Target</span>
+                      <p className="font-bold text-white">Autonomous Package Delivery Run</p>
+                      <p className="text-slate-400 leading-relaxed text-[11px]">
                         Deploy version 2.1 to physical robot and achieve zero manual interventions over 500m course.
                       </p>
                     </div>
@@ -277,6 +279,9 @@ export default function HandoverCenterPage() {
               </div>
             </div>
           )}
+
+          {/* TAB 1.5: Company Templates */}
+          {activeTab === "templates" && <CompanyTemplateView />}
 
           {/* TAB 2: Successor Missions */}
           {activeTab === "missions" && (

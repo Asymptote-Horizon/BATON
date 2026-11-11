@@ -12,7 +12,9 @@ import {
   AlertTriangle,
   Lock,
   Terminal,
-  Activity
+  Activity,
+  Sparkles,
+  RotateCcw
 } from "lucide-react";
 
 interface TestCase {
@@ -40,172 +42,183 @@ export default function SecurityLabPage() {
   const [data, setData] = useState<SimulationResponse | null>(null);
   const [running, setRunning] = useState(false);
   const [projectId, setProjectId] = useState<string>("");
+  const [hasRun, setHasRun] = useState(false);
 
   useEffect(() => {
     api.getProjects().then((projs) => {
       const pid = projs[0]?.id;
-      if (pid) {
-        setProjectId(pid);
-        // Run initial simulation
-        api.runSecuritySimulation(pid).then((res) => setData(res));
-      }
+      if (pid) setProjectId(pid);
     });
   }, []);
 
   const handleRunSimulation = async () => {
     if (!projectId || running) return;
     setRunning(true);
+    setData(null);
+
     try {
       const res = await api.runSecuritySimulation(projectId);
-      setData(res);
+      setTimeout(() => {
+        setData(res);
+        setHasRun(true);
+        setRunning(false);
+      }, 1200);
     } catch (err) {
       console.error("Simulation failed:", err);
-    } finally {
       setRunning(false);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Privacy & Canary Leak Simulator</h1>
-            <span className="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-200">
+            <div className="w-8 h-8 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center font-bold">
+              <Fingerprint className="w-5 h-5" />
+            </div>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">Privacy & Canary Leak Simulator</h1>
+            <span className="text-xs bg-purple-500/15 text-purple-300 font-bold px-2.5 py-0.5 rounded-full border border-purple-500/30">
               Active Defense Lab
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
-            Real-time adversary penetration testing verifying that sensitive canary strings and credentials never leak across role boundaries.
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            Penetration testing harness verifying that sensitive canary strings and credentials never leak across role boundaries.
           </p>
         </div>
 
         <button
           onClick={handleRunSimulation}
           disabled={running}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-sm transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs sm:text-sm font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
         >
           {running ? (
             <>
-              <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Simulating Attack Vectors...</span>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>Executing Penetration Vectors...</span>
             </>
           ) : (
             <>
               <Play className="w-4 h-4 fill-white" />
-              <span>Run Automated Leak Suite</span>
+              <span>{hasRun ? "Re-Run Security Simulation" : "Run Security Simulation"}</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Metric Cards */}
-      {data && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-            <span className="text-xs font-semibold text-slate-500">Shield Status</span>
-            <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm">
-              <ShieldCheck className="w-5 h-5 text-emerald-500" />
-              <span>{data.shield_status}</span>
-            </div>
+      {/* Clean State Before Simulation */}
+      {!hasRun && !running && (
+        <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-12 text-center space-y-5">
+          <div className="w-16 h-16 rounded-2xl bg-blue-600/15 text-blue-400 border border-blue-500/30 flex items-center justify-center mx-auto">
+            <Lock className="w-8 h-8" />
           </div>
-
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-            <span className="text-xs font-semibold text-slate-500">Canary Leak Rate</span>
-            <div className="text-2xl font-extrabold text-slate-900">
-              {data.leak_rate_percentage}%
-            </div>
+          <div className="max-w-md mx-auto space-y-2">
+            <h3 className="text-lg font-bold text-white">Canary Penetration Harness Ready</h3>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Click below to execute the 5 automated attack vectors against the Assistant RAG layer. 
+              Tests evaluate direct extraction, paraphrased probing, and prompt injection across user clearance roles.
+            </p>
           </div>
-
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-            <span className="text-xs font-semibold text-slate-500">Tests Evaluated</span>
-            <div className="text-2xl font-extrabold text-indigo-600">
-              {data.total_tests} Vectors
-            </div>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 shadow-sm space-y-1">
-            <span className="text-xs font-semibold text-emerald-800">Passed Verifications</span>
-            <div className="text-2xl font-extrabold text-emerald-700">
-              {data.passed_tests} / {data.total_tests}
-            </div>
-          </div>
+          <button
+            onClick={handleRunSimulation}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-xl shadow-blue-600/30 transition-all cursor-pointer"
+          >
+            Launch 5 Adversarial Test Vectors
+          </button>
         </div>
       )}
 
-      {/* Test Results Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-slate-900">
-            Automated Penetration Test Vectors
-          </h3>
-          <span className="text-xs text-slate-400">Microsoft Presidio + Canary Shield Policy Active</span>
+      {/* Loading Animation */}
+      {running && (
+        <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-12 text-center space-y-4">
+          <div className="w-12 h-12 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <h3 className="text-base font-bold text-white">Simulating Adversarial Probes...</h3>
+          <p className="text-xs text-slate-400 font-mono">
+            Evaluating SEC-001 (Direct), SEC-002 (Paraphrase), SEC-003 (Injection), SEC-004 (Cross-Role), SEC-005 (Admin Audit)...
+          </p>
         </div>
+      )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-              <tr>
-                <th className="p-4">Test ID & Vector</th>
-                <th className="p-4">Target Role</th>
-                <th className="p-4">Adversary Prompt Payload</th>
-                <th className="p-4">Canary Token</th>
-                <th className="p-4">Result & Verification</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {!data ? (
-                <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-400">
-                    Running canary leak simulator...
-                  </td>
-                </tr>
-              ) : (
-                data.results.map((test) => (
-                  <tr key={test.test_id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-4 font-mono">
-                      <span className="font-bold text-slate-900 block">{test.test_id}</span>
-                      <span className="text-[10px] text-slate-500 uppercase">{test.attack_type.replace(/_/g, " ")}</span>
-                    </td>
+      {/* Results Display After Run */}
+      {data && !running && (
+        <div className="space-y-6">
+          {/* Summary Banner */}
+          <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold ${
+                data.leak_rate_percentage === 0
+                  ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                  : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+              }`}>
+                {data.leak_rate_percentage === 0 ? <ShieldCheck className="w-6 h-6" /> : <ShieldAlert className="w-6 h-6" />}
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Shield Status</span>
+                <h3 className="text-lg font-bold text-white">{data.shield_status}</h3>
+                <p className="text-xs text-slate-400">
+                  {data.passed_tests} of {data.total_tests} adversarial vectors successfully contained.
+                </p>
+              </div>
+            </div>
 
-                    <td className="p-4">
-                      <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded capitalize">
-                        {test.target_role.replace(/_/g, " ")}
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Leak Rate</span>
+                <div className="text-2xl font-extrabold text-emerald-400">{data.leak_rate_percentage}%</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Test Vectors List */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">
+              Evaluated Adversarial Test Vectors
+            </h3>
+            {data.results.map((test) => (
+              <div
+                key={test.test_id}
+                className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/15 px-2 py-0.5 rounded-lg border border-blue-500/30">
+                      {test.test_id}
+                    </span>
+                    <span className="text-xs font-bold text-white capitalize">
+                      {test.attack_type.replace("_", " ")}
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                      Role: {test.target_role}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    {test.passed ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-800">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Contained
                       </span>
-                    </td>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-400 bg-rose-950/40 px-2.5 py-1 rounded-full border border-rose-800">
+                        <XCircle className="w-3.5 h-3.5" /> Leaked
+                      </span>
+                    )}
+                  </div>
+                </div>
 
-                    <td className="p-4 max-w-xs font-mono text-[11px] text-slate-700 truncate" title={test.prompt_payload}>
-                      "{test.prompt_payload}"
-                    </td>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                  <div className="text-[10px] uppercase font-bold text-slate-500">Adversarial Prompt Payload:</div>
+                  <p className="text-xs font-mono text-slate-300">{test.prompt_payload}</p>
+                </div>
 
-                    <td className="p-4 font-mono text-[11px] text-indigo-700">
-                      {test.canary_id}
-                    </td>
-
-                    <td className="p-4">
-                      <div className="space-y-1">
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                          test.passed
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-300"
-                            : "bg-rose-50 text-rose-700 border-rose-300"
-                        }`}>
-                          {test.passed ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
-                          {test.passed ? "CONTAINED / PASSED" : "LEAK DETECTED"}
-                        </span>
-                        <p className="text-[11px] text-slate-500 leading-snug">
-                          {test.status_explanation}
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  {test.status_explanation}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
-

@@ -197,6 +197,39 @@ class LLMAdapter:
         return cls._deterministic_extraction(chunk_content, source_metadata)
 
     @classmethod
+    def answer_question(cls, question: str, context_snippets: List[str]) -> Optional[str]:
+        """
+        Synthesizes a grounded, concise answer based on authorized project context snippets.
+        """
+        joined_context = "\n\n---\n\n".join(context_snippets[:6]) if context_snippets else "No specific document passages provided."
+        prompt = f"""You are the BATON Project Continuity Assistant for Project Aether (Autonomous Mobile Robotics Platform).
+Answer the user's question clearly, concisely, and professionally.
+Base your answer strictly on the authorized project context below.
+If the user is asking a greeting or general orientation question, respond warmly, explain your role, and guide them.
+Do not hallucinate or state unverified facts.
+
+Authorized Project Context:
+{joined_context}
+
+User Question: {question}
+
+Helpful, Grounded Answer:"""
+
+        # 1. Primary: OpenRouter
+        if settings.OPENROUTER_API_KEY:
+            resp = cls._call_openrouter(prompt)
+            if resp and len(resp.strip()) > 5:
+                return resp.strip()
+
+        # 2. Fallback 1: Gemini
+        if settings.GEMINI_API_KEY:
+            resp = cls._call_gemini(prompt)
+            if resp and len(resp.strip()) > 5:
+                return resp.strip()
+
+        return None
+
+    @classmethod
     def _build_extraction_prompt(cls, chunk_content: str) -> str:
         return f"""You are the core intelligence of BATON – Evidence-Linked Knowledge Handover Platform.
 Analyze the following source text and extract structured project knowledge.
